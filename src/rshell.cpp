@@ -5,22 +5,32 @@
 
 using namespace std;
 
+void user_info()
+{
+  char* username = getlogin();
+  if(username == NULL)
+  {
+    perror("getlogin failed");
+  }
+
+  char hostname[30];
+  int r_host = gethostname(hostname, 30);
+ 
+  if(r_host == -1)
+  {
+    perror("gethostname failed");
+  }
+  cout << "[" << username << "@" << hostname << "]€ ";
+}
+
 int main()
 {
   string cmd;
 
-  char* username = getlogin();
-  if(username == NULL)
-    perror("getlogin failed");
-
-  char host[30];
-  int r_host = gethostname(host, 30);
-  if(r_host == -1)
-    perror("gethostname failed");
-
+  cout << "Entering rshell." << endl;
   while(cmd != "exit")
   {
-    cout << "[" << username << "@" << host << "]R$ ";
+    user_info();
     cin >> cmd;
   }
   return 0;
