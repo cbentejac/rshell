@@ -58,21 +58,18 @@ void Command::setConnectors(vector<Connector> connect)
 string Command::stripComments()
 {
   string str = command;
-  char* search = strchr(const_cast<char*>(str.c_str()), '#'); // Research the integer corresponding to # and return a pointer to the first occurence
+  char* search = strchr(const_cast<char*>(str.c_str()), '#'); // Casts a copy of the command attribute; then searches for the integer corresponding to # and return a pointer to the first occurence
   if(search != NULL) // If an occurrence has been found, the pointer is not NULL
   {
-    cout << "COMMENT FOUND!" << endl;
-    cout << strlen(search) << endl;
-    command = command.substr(0, command.size()-(strlen(search)));
-    cout << command << endl;
+    setLine(command.substr(0, command.size()-(strlen(search)))); // Modify the commnand attribute by removing the part of the original command line that starts with # 
   }
-      //s = s.substr(0, s.size()-1);
-  return command;
+  return getLine();
 }
 
 int main()
 {
   Command cmd("ls # -lR");
   cmd.stripComments();
+  cout << cmd.getLine() << endl;
   return 0;
 }
