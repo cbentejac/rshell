@@ -6,7 +6,7 @@
 #include "DoubleAnd.hpp"
 #include "DoubleOr.hpp"
 #include "Arguments.hpp"
-
+#include "Executable.hpp"
 
 using namespace std;
 
@@ -32,6 +32,8 @@ void userInfo()
 
 int main()
 {
+  cout << "TEST CONNECTORS" << endl << endl;
+  
   Semicolon s;
   cout << "Semicolon : " << s.getRepresentation() << s.getNeedSuccess() << s.getNeedFail() << endl;
 
@@ -41,6 +43,7 @@ int main()
   DoubleOr o;
   cout << "DoubleOr : " << o.getRepresentation() << o.getNeedSuccess() << o.getNeedFail() << endl;
 
+  cout << endl << "TEST ARGUMENTS" << endl << endl;
   char test_char[30] = "test char";
   Arguments ar(test_char);
 
@@ -50,6 +53,15 @@ int main()
   char* test_echo = ar.getArguments();
   cout << test_echo << endl;
 
+
+  cout << endl << "TEST EXECUTABLE" << endl << endl;
+  Executable exec(test_char);
+  exec.readExecutable();
+  exec.setExecutable(const_cast<char*>("New exec"));
+  exec.readExecutable();
+  test_echo = exec.getExecutable();
+  cout << test_echo << endl << endl;
+  
   string cmd;
 
   cout << "Entering rshell." << endl;
