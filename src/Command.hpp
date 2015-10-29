@@ -1,7 +1,9 @@
 #ifndef _COMMAND_HPP_
 #define _COMMAND_HPP_
 
-#include "Connector.hpp"
+#include "Semicolon.hpp"
+#include "DoubleAnd.hpp"
+#include "DoubleOr.hpp"
 #include "Arguments.hpp"
 #include "Executable.hpp"
 #include <vector>
@@ -21,9 +23,14 @@ class Command
     void setArguments(std::vector<Arguments> args);
     std::vector<Connector> getConnectors();
     void setConnectors(std::vector<Connector> connect);
+    
+    void addExecutable(Executable e);
+    void addArguments(Arguments a);
+    void addConnector(Connector c);
 
     /* Parsing methods */
-    std::string stripComments();
+    std::string stripComments(); // Remove comments from the command line
+    void parse(); // Parse the command line
 
   protected:
     std::string command; // Command typed by the user
