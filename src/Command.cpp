@@ -72,35 +72,85 @@ void Command::addConnector(Connector c)
 }
 
 
-/* Static methods that will be used to handle the case were the user does'nt respect the connectors syntax */
-static bool endWithSemicolon(char* str) // Returns true if the string ends with a semicolon
+/* Static methods that will be used to handle the case were the user doesn't respect the connectors syntax */
+/*static bool containSemicolon(char* str)
 {
   char* s = strchr(str, ';');
   if(s != NULL)
     return true;
   return false;
-}
+}*/
 
-static bool endWithAnd(char *str)
+
+static bool endWithSemicolon(char* str) // Returns true if the string ends with a semicolon
 {
   string s(str);
+  if(s[s.size() - 1] == ';')
+    return true;
+  return false;
+}
+
+/*static bool endWithAnd(char *str)
+{
+  string s(str);
+  if(s.size() < 2)
+    return false;
   if(s[s.size() - 1] == '&' && s[s.size() - 2] == '&')
     return true;
   return false;
 }
 
+
 static bool endWithOr(char *str)
 {
   string s(str);
+  if(s.size() < 2)
+    return false;
   if(s[s.size() - 1] == '|' && s[s.size() - 2] == '|')
     return true;
   return false;
 }
 
+
 static bool endWithConnector(char* str)
 {
   return endWithSemicolon(str) || endWithAnd(str) || endWithOr(str);
 }
+
+
+static bool beginWithSemicolon(char *str)
+{
+  string s(str);
+  if(s[0] == ';')
+    return true;
+  return false;
+}
+
+static bool beginWithAnd(char* str)
+{
+  string s(str);
+  if(s.size() < 2)
+    return false;
+  if(s[0] == '&' && s[1] == '&')
+    return true;
+  return false;
+}
+
+static bool beginWithOr(char* str)
+{
+  string s(str);
+  if(s.size() < 2)
+    return false;
+  if(s[0] == '|' && s[1] == '|')
+    return true;
+  return false;
+}
+
+static bool beginWithConnector(char* str)
+{
+  return beginWithSemicolon(str) || beginWithAnd(str) || beginWithOr(str);
+}
+*/
 
 static bool isConnector(char* str) // Returns true if the string is a connector 
 {
@@ -165,64 +215,81 @@ void Command::parse() // Determines the executables, arguments, and connectors o
   {
     if(i == 0) // If i == 0, then it must be an executable
     {
-      if(endWithConnector(token))// Check if it ends with a connector (semicolon or other connectors with wrong syntax)
+      if(endWithSemicolon(token))// Check if it ends with a semicolon 
       {
         string s(token); // Copy of the token
-        if(endWithSemicolon(token)) // Ends with a semicolon (connector of size 1)
-	{
-          s = s.substr(0, s.size() - 1); // Removes the semicolon
-	  addExecutable(Executable(const_cast<char*>(s.c_str())));
-	  addConnector(Semicolon());
-	}
-	else // Ends with && or || (connector of size 2)
-	{
-	  s = s.substr(0, s.size() - 2); // Removes the && or the ||
-	  addExecutable(Executable(const_cast<char*>(s.c_str())));
-	  if(endWithAnd(token))
-	    addConnector(DoubleAnd());
-	  else
-	    addConnector(DoubleOr());
-	}
-	addArguments(Arguments(const_cast<char*>(""))); // No arguments for this command, as the executable is immediately followed by a connector
+        s = s.substr(0, s.size() - 1); // Removes the semicolon
+        addExecutable(Executable(const_cast<char*>(s.c_str())));
+        addConnector(Semicolon());
+	addArguments(Arguments(const_cast<char*>(""))); // No arguments for this command, as the executable is immediately followed by a semicolon
+	i = 0; // If there is a next token, it will necessarily be an executable
+	cout << "Semicolon found" << endl;
       }
-      else // The executable doesn't end with a connector: either there is an argument or a connector or nothing after
+      else // The executable doesn't end with a semicolon: either there is an argument or a connector or nothing after
       {
         addExecutable(Executable(token)); 
+	cout << "Executable added alone" << endl;
         i++; // The next token to be analyzed won't be an executable, so i must be different from 0
       }
     }
 
-    if(isConnector(token))
+    else if(isConnector(token)) // Checks if the token is a connector
     {
       addConnector(recognizeConnector(token));
-      i = 0; // A connector ends an instruction, so we reinitialize i to tell the program that if there is a next token, it will be an executable
+      cout << "Connector added" << endl;
+      i = 0; // If there is a next token, it will necessarily be an executable
     }
-      
-    cout << token << " ends with ;? : " << endWithSemicolon(token) << endl;
-    cout << token << " is connector? : " << isConnector(token) << endl;
-    cout << token << " ends with &&? : " << endWithAnd(token) << endl;
-    cout << token << " ends with ||? : " << endWithOr(token) << endl;
-    
-    token = strtok(NULL, " ");
 
+    else
+    { 
+      string s(token);
+
+      /* GERER LE CAS OU LE POINT VIRGULE SE TROUVE A LA FIN DE L'ARGUMENT */
+
+      // Handles the case where there are several arguments in several tokens 
+      //if(getArguments().size() < getExecutables().size()) // If the size is inferior, it means that it is the first argument
+      //{ 
+        addArguments(Arguments(const_cast<char*>(s.c_str()))); 
+	cout << "Argument added: " << const_cast<char*>(s.c_str()) << endl;
+      //}
+      /*else // It is at least the second argument for the same command line
+      {
+        Arguments arg = getArguments()[getArguments().size() - 1].getArguments(); // Copy of the arguments that is already in the vector
+	string last(arg.getArguments());
+	last += s;
+	arg.setArguments(const_cast<char*>(last.c_str()));
+	getArguments().pop_back();
+        addArguments(arg);
+      }*/
+    }
+    cout << token << endl;
+    token = strtok(NULL, " ");
   }
+  if(getExecutables().size() > getConnectors().size())
+    addConnector(Semicolon());
+  if(getExecutables().size() > getArguments().size())
+    addArguments(Arguments(const_cast<char*>("")));
 
 }
 
 
 int main()
 {
-  Command cmd("ls; ls -lR&& ls|| echo 'hello' && ls  # -lR");
+  Command cmd("ls -lR || ls -lR;#; test commentaires");
   cmd.stripComments();
-
+  cout << cmd.getLine() << endl << endl;
   cmd.parse();
   
   for(unsigned i = 0; i < cmd.getExecutables().size(); i++)
   {
-    cout << endl << "Affichage contenu des vecteurs" << endl; 
+    cout << endl << "Affichage executables" << endl; 
     cmd.getExecutables()[i].readExecutable();
+    cout << endl << "Affichage arguments" << endl;
     cmd.getArguments()[i].readArguments();
-    cout << cmd.getConnectors()[i].getRepresentation() << endl;
+    cout << endl << "Affiche connecteurs" << endl;
+    cmd.getConnectors()[i].getRepresentation();
+    cout << endl << "Fin tour" << endl;
+    
   }
 
   
