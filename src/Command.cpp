@@ -213,85 +213,115 @@ void Command::parse() // Determines the executables, arguments, and connectors o
   /* Tokenization of the command line; the string is divided in substrings that were separated by spaces */
   while(token != NULL)
   {
+    cout << "Token: " << token << endl;
+    string s(token); // Copy of the token 
+   
     if(i == 0) // If i == 0, then it must be an executable
     {
+      if(getExecutables().size() > getArguments().size())
+        addArguments(Arguments(const_cast<char*>("arg bidon")));
+
+
       if(endWithSemicolon(token))// Check if it ends with a semicolon 
       {
-        string s(token); // Copy of the token
         s = s.substr(0, s.size() - 1); // Removes the semicolon
         addExecutable(Executable(const_cast<char*>(s.c_str())));
         addConnector(Semicolon());
-	addArguments(Arguments(const_cast<char*>(""))); // No arguments for this command, as the executable is immediately followed by a semicolon
+	addArguments(Arguments(const_cast<char*>("arg vide ajoute avec exec_semicolon"))); // No arguments for this command, as the executable is immediately followed by a semicolon
 	i = 0; // If there is a next token, it will necessarily be an executable
 	cout << "Semicolon found" << endl;
       }
       else // The executable doesn't end with a semicolon: either there is an argument or a connector or nothing after
       {
-        addExecutable(Executable(token)); 
+        addExecutable(Executable(const_cast<char*>(s.c_str()))); 
 	cout << "Executable added alone" << endl;
         i++; // The next token to be analyzed won't be an executable, so i must be different from 0
       }
     }
 
-    else if(isConnector(token)) // Checks if the token is a connector
+    else if(isConnector(token))
     {
       addConnector(recognizeConnector(token));
-      cout << "Connector added" << endl;
-      i = 0; // If there is a next token, it will necessarily be an executable
+      i = 0;
     }
 
     else
-    { 
-      string s(token);
-
-      /* GERER LE CAS OU LE POINT VIRGULE SE TROUVE A LA FIN DE L'ARGUMENT */
-
-      // Handles the case where there are several arguments in several tokens 
-      //if(getArguments().size() < getExecutables().size()) // If the size is inferior, it means that it is the first argument
-      //{ 
-        addArguments(Arguments(const_cast<char*>(s.c_str()))); 
-	cout << "Argument added: " << const_cast<char*>(s.c_str()) << endl;
-      //}
-      /*else // It is at least the second argument for the same command line
+    {
+      if(getExecutables().size() > getArguments().size())
       {
-        Arguments arg = getArguments()[getArguments().size() - 1].getArguments(); // Copy of the arguments that is already in the vector
-	string last(arg.getArguments());
-	last += s;
-	arg.setArguments(const_cast<char*>(last.c_str()));
-	getArguments().pop_back();
-        addArguments(arg);
-      }*/
+        if(endWithSemicolon(token))
+	{
+	  s = s.substr(0, s.size() - 1);
+	  addArguments(Arguments(const_cast<char*>(s.c_str())));
+	  addConnector(Semicolon());
+	  i = 0;
+	}
+        else
+	{
+	  addArguments(Arguments(const_cast<char*>(s.c_str())));
+	}
+      }
+      else
+      {
+        if(endWithSemicolon(token))
+	{
+	  s = s.substr(0, s.size() - 1);
+	  string preArg(getArguments()[getArguments().size() - 1].getArguments());
+	  preArg += s;
+	  getArguments().pop_back();
+	  addArguments(Arguments(const_cast<char*>(preArg.c_str())));
+	  addConnector(Semicolon());
+	  i = 0;
+	}
+	else
+	{
+	  string preArg(getArguments()[getArguments().size() - 1].getArguments());
+	  preArg += s;
+	  getArguments().pop_back();
+	  addArguments(Arguments(const_cast<char*>(preArg.c_str())));
+	}
+      }
     }
-    cout << token << endl;
+
+
     token = strtok(NULL, " ");
   }
+
   if(getExecutables().size() > getConnectors().size())
-    addConnector(Semicolon());
+    addConnector(DoubleOr());
   if(getExecutables().size() > getArguments().size())
-    addArguments(Arguments(const_cast<char*>("")));
+    addArguments(Arguments(const_cast<char*>("arg vide ajoute a la fin")));
+
 
 }
 
 
 int main()
 {
-  Command cmd("ls -lR || ls -lR;#; test commentaires");
+  Command cmd("ls -LR #; test commentaires");
   cmd.stripComments();
   cout << cmd.getLine() << endl << endl;
   cmd.parse();
+  cout << "TAILLE VECTORS: " << cmd.getExecutables().size() << ", " << cmd.getArguments().size() << ", " << cmd.getConnectors().size() << endl;
   
   for(unsigned i = 0; i < cmd.getExecutables().size(); i++)
   {
     cout << endl << "Affichage executables" << endl; 
-    cmd.getExecutables()[i].readExecutable();
+    cout << cmd.getExecutables()[i].getExecutable() << endl;
     cout << endl << "Affichage arguments" << endl;
-    cmd.getArguments()[i].readArguments();
+    cout << cmd.getArguments()[i].getArguments() << endl;
     cout << endl << "Affiche connecteurs" << endl;
-    cmd.getConnectors()[i].getRepresentation();
+    cout << cmd.getConnectors()[i].getRepresentation();
     cout << endl << "Fin tour" << endl;
     
   }
 
-  
+/*
+  cmd.addConnector(Semicolon());
+  cmd.addArguments(Arguments(const_cast<char*>("arg bidon")));
+  cmd.getArguments()[0].readArguments();
+  cout << cmd.getConnectors()[0].getRepresentation() << endl;  
+
+  */
   return 0;
 }
