@@ -10,7 +10,7 @@
 class Command 
 {
   public:
-    Command(char* e, char* arg, Connector c);
+    Command(std::string e, std::string arg, Connector c);
     ~Command();
 
     Executable getExecutable();

@@ -6,15 +6,15 @@
 class Executable
 {
   public:
-    Executable(char* exec);
+    Executable(std::string exec);
     ~Executable();
 
-    char* getExecutable();
-    void setExecutable(char* exec);
+    std::string getExecutable();
+    void setExecutable(std::string exec);
     void readExecutable();
 
   protected:
-    char* executable;
+    std::string executable;
 };
 
 #endif

@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Executable::Executable(char* exec) : executable(exec)
+Executable::Executable(string exec) : executable(exec)
 {
 
 }
@@ -12,12 +12,12 @@ Executable::~Executable()
 
 }
 
-char* Executable::getExecutable()
+string Executable::getExecutable()
 {
   return executable;
 }
 
-void Executable::setExecutable(char* exec)
+void Executable::setExecutable(string exec)
 {
   executable = exec; 
 }

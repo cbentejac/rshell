@@ -6,15 +6,15 @@
 class Arguments {
 
   public:
-    Arguments(char* arg);
+    Arguments(std::string arg);
     ~Arguments();
 
-    char* getArguments();
-    void setArguments(char* arg);
+    std::string getArguments();
+    void setArguments(std::string  arg);
     void readArguments();
 
   protected:
-    char* arguments;
+    std::string arguments;
 
 };
 

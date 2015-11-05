@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Command::Command(char* e, char* arg, Connector c) : executable(Executable(e)), arguments(Arguments(arg)), connector(c)
+Command::Command(string e, string arg, Connector c) : executable(Executable(e)), arguments(Arguments(arg)), connector(c)
 {
 
 }

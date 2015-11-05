@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Arguments::Arguments(char* arg) : arguments(arg)
+Arguments::Arguments(string arg) : arguments(arg)
 {
 
 }
@@ -12,14 +12,14 @@ Arguments::~Arguments()
 
 }
 
-char* Arguments::getArguments()
+string Arguments::getArguments()
 {
   return arguments;
 }
 
-void Arguments::setArguments(char* arg)
+void Arguments::setArguments(string arg)
 {
-  arguments = strcpy(arguments, arg); 
+  arguments = string(arg); 
 }
 
 void Arguments::readArguments()
