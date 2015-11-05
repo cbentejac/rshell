@@ -6,39 +6,25 @@
 #include "DoubleOr.hpp"
 #include "Arguments.hpp"
 #include "Executable.hpp"
-#include <vector>
 
 class Command 
 {
   public:
-    Command(std::string line);
+    Command(char* e, char* arg, Connector c);
     ~Command();
 
-    /* Getters and setters */
-    std::string getLine();
-    void setLine(std::string cmd);
-    std::vector<Executable> getExecutables();
-    void setExecutables(std::vector<Executable> ex);
-    std::vector<Arguments> getArguments();
-    void setArguments(std::vector<Arguments> args);
-    std::vector<Connector> getConnectors();
-    void setConnectors(std::vector<Connector> connect);
-    
-    void addExecutable(Executable e);
-    void addArguments(Arguments a);
-    void addConnector(Connector c);
+    Executable getExecutable();
+    Arguments getArguments();
+    Connector getConnector();
 
-    /* Parsing methods */
-    std::string stripComments(); // Remove comments from the command line
-    void parse(); // Parse the command line
-
+    void setExecutable(Executable e);
+    void setArguments(Arguments arg);
+    void setConnector(Connector c);
+  
   protected:
-    std::string command; // Command typed by the user
-    // Vectors will be used to handle the case where the user typed several commands on the same line
-    std::vector<Executable> executables; 
-    std::vector<Arguments> arguments;
-    std::vector<Connector> connectors;
-
+    Executable executable;
+    Arguments arguments;
+    Connector connector;
 };
 
 #endif
