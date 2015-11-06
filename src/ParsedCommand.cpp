@@ -50,12 +50,7 @@ void ParsedCommand::addCommand(Command c)
   commands.push_back(Command(c.getExecutable().getExecutable(), c.getArguments().getArguments(), c.getConnector()));
 }
 
-void ParsedCommand::deleteLastCommand()
-{
-  commands.pop_back();
-}
 vector<Command> ParsedCommand::getCommandVector()
-
 {
   return commands;
 }
