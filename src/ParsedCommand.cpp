@@ -248,6 +248,13 @@ void ParsedCommand::parse()
   }
 }
 
+static bool emptyArguments(Command cmd)
+{
+  if(cmd.getArguments().getArguments() == "")
+    return true;
+  return false;
+}
+
 void ParsedCommand::execute(bool &quit)
 {
   parse();
@@ -271,6 +278,9 @@ void ParsedCommand::execute(bool &quit)
     }
 
     char* args[3] = { const_cast<char*>(getCommand(i).getExecutable().getExecutable().c_str()), const_cast<char*>(getCommand(i).getArguments().getArguments().c_str()), NULL };
+
+    if(emptyArguments(getCommand(i)))
+      args[1] = NULL;
     
     pid_t c_pid, pid;
     int status;

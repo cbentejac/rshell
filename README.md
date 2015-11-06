@@ -17,6 +17,7 @@ In order to distinguish the normal shell from the *_rshell_*, € will be used i
 - Problème d'exécution des commandes sans arguments telles que ls ou ps. Vient sous doute du fait que la liste d'argument est initialisée par défaut à "". 
 
 	=> Avant de remplir char\* args[], vérifier si la liste d'argument est vide, et si tel est le cas, args[2] plutôt que args[3].
+	RESOLU !!!
 - Problème avec les connnecteurs && et || (ne pas oublier ; qui ne devrait pas fonctionner s'il colle l'exécutable de la commande suivante) lorsqu'ils sont collés à la liste d'arguments qu'ils suivent ou l'exécutable qu'ils précèdent.
 
 	=> DEVRAIT SE FAIRE AU MOMENT DE SEPARATE() !!! Dans Parse.cpp (en local), toutes les fonctions (ou presque) permettant de traiter ces cas ont été écrites, il suffit donc de les copier/coller et de les réutiliser. Si le temps, écrire une fonction qui regroupe toutes ces fonctions ou qui d'office vérifie tous ces cas sans faire appel à trop de fonctions annexes (dans l'idéal).
