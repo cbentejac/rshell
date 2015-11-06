@@ -1,12 +1,17 @@
-// Base file; others files will inherit from it
+/**
+ * \file Base.hpp
+ * \author Candice Bentejac
+ * \date November 6, 2015
+ * \brief Base file containing the includes that are common to all the other files
+ */
 
 #ifndef _BASE_HPP_
 #define _BASE_HPP_
 
 #include <iostream>
 #include <string.h>
-#include <unistd.h> // execvp, fork, waitpid, getlogin, gethostname
-#include <stdio.h> // perror
-#include <stdlib.h> // exit
+#include <stdio.h> 
+#include <stdlib.h>
+
 
 #endif
