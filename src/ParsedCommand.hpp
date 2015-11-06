@@ -25,6 +25,7 @@ class ParsedCommand {
     std::vector<std::string> separateCommands(); // Returns a string vector containing strings that correspond to Command (every element of the returned vector can be used to create a Command object)
     Command createCommand(std::string command);
     void parse();
+    void execute();
   
   protected:
     std::string commandLine;

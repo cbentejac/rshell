@@ -1,5 +1,8 @@
 #include "ParsedCommand.hpp"
+#include <unistd.h> 
 #include <assert.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 using namespace std;
 
@@ -245,25 +248,79 @@ void ParsedCommand::parse()
   }
 }
 
-
-
-int main()
+void ParsedCommand::execute()
 {
-  ParsedCommand cmd("ls -LR /; echo \"truc machin chouette\" && git status # blafzno fidhf"); 
-  cout << "COMMAND LINE BEGIN : " << cmd.getLine() << endl;
+  cout << getLine() << endl << endl;
+  bool runNext = true; // Will the next instruction be ran? By default, true in case the connector is a semicolon
+  bool quit = false; // Exit rshell? By default, false because it must be triggered by the user
+
+  for(unsigned i = 0;  i < getCommandVector().size(); i++)
+  {
+    //cout << getCommand(i).getExecutable().getExecutable() << " " << getCommand(i).getArguments().getArguments() << getCommand(i).getConnector().getRepresentation() << endl << endl;
+    bool success = false;
+    bool fail = false;
+    
+    if(getCommand(i).getExecutable().getExecutable() == "exit") // If exit is the executable, quit value becomes true
+      quit = true;
+
+    if(quit == true || runNext == false) // If exit has been found or if the connector "refuses" to execute the next command, stop trying executing the rest of the command line
+    {
+      break;
+    }
+
+    char* args[3] = { const_cast<char*>(getCommand(i).getExecutable().getExecutable().c_str()), const_cast<char*>(getCommand(i).getArguments().getArguments().c_str()), NULL };
+    
+    pid_t c_pid, pid;
+    int status;
+
+    c_pid = fork();
+
+    if(c_pid < 0)
+    {
+      perror("Error: fork failed");
+      exit(1);
+    }
+    else if(c_pid == 0)
+    {
+      execvp(args[0], args);
+      perror("Error: execvp failed");
+      fail = true;
+    }
+    else if(c_pid > 0)
+    {
+      if((pid = wait(&status)) < 0)
+      {
+        perror("Error occurred during wait");
+	exit(1);
+      }
+    }
+    
+    if(WIFEXITED(status)) // The child process ended normally
+    {
+      if(WEXITSTATUS(status) != 0)
+      {
+        fail = true; 
+      }
+      else
+      {
+        success = true;
+      }
+    }
+    else
+    {
+      fail = true;
+    }
+    runNext = getCommand(i).runNext(success, fail);
+  }
+}
+
+int main(int argc, char * argv[])
+{
+  ParsedCommand cmd("echo 'hello' && ls -a; ps"); 
 
   cmd.parse();
-  
-  for(unsigned i = 0; i < cmd.getCommandVector().size(); i++)
-  {
-    Command cmd_tmp = cmd.getCommand(i);
-    cout << endl << endl << "COMMAND " << i + 1 << endl;
-    cout << "Executable : " << cmd_tmp.getExecutable().getExecutable() << endl;
-    cout << "Arguments : " << cmd_tmp.getArguments().getArguments() << endl;
-    cout << "Connector : " << cmd_tmp.getConnector().getRepresentation() << endl;
-  }
+  cmd.execute();
 
-  cout << endl << "COMMAND LINE END : " << cmd.getLine() << endl;
   
   return 0;
 }
