@@ -41,3 +41,19 @@ void Command::setConnector(Connector c)
 {
   connector = Connector(c);
 }
+
+bool Command::runNext(bool success, bool fail)
+{
+  if(getConnector().getNeedSuccess() == success && getConnector().getNeedFail() == fail) 
+  {
+    return true;
+  }
+  else if(getConnector().getRepresentation() == ";")
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}

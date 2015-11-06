@@ -20,6 +20,8 @@ class Command
     void setExecutable(Executable e);
     void setArguments(Arguments arg);
     void setConnector(Connector c);
+
+    bool runNext(bool success, bool fail);
   
   protected:
     Executable executable;
