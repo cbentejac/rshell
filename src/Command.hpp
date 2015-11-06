@@ -1,3 +1,10 @@
+/**
+ * \file Command.hpp
+ * \author Candice Bentejac
+ * \date November 6, 2015
+ * \brief Header for the Command class.
+ */
+
 #ifndef _COMMAND_HPP_
 #define _COMMAND_HPP_
 
@@ -21,7 +28,7 @@ class Command
     void setArguments(Arguments arg);
     void setConnector(Connector c);
 
-    bool runNext(bool success, bool fail);
+    bool runNext(bool success);
   
   protected:
     Executable executable;

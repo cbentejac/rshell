@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Semicolon::Semicolon() : Connector(";", false, false)
+Semicolon::Semicolon() : Connector(";", false)
 {
 
 }

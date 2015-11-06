@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Connector::Connector(string r, bool success, bool fail) : representation(r), needSuccess(success), needFail(fail)
+Connector::Connector(string r, bool success) : representation(r), needSuccess(success)
 {
 
 }
@@ -31,13 +31,3 @@ void Connector::setNeedSuccess(bool success)
 {
   needSuccess = success;
 }
-
-bool Connector::getNeedFail()
-{
-  return needFail;
-}
-
-void Connector::setNeedFail(bool fail)
-{
-  needFail = fail;
-} 

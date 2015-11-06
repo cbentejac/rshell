@@ -260,14 +260,12 @@ void ParsedCommand::execute(bool &quit)
   parse();
 
   bool runNext = true; // Will the next instruction be ran? By default, true in case the connector is a semicolon
- // bool quit = false; // Exit rshell? By default, false because it must be triggered by the user
 
   for(unsigned i = 0;  i < getCommandVector().size(); i++)
   {
     bool success = false;
-    bool fail = false;
     
-    if(getCommand(i).getExecutable().getExecutable() == "exit") // If exit is the executable, quit value becomes true
+    if(getCommand(i).getExecutable().getExecutable() == "exit" && runNext == true) // If exit is the executable and the next instruction is to be ran, quit value becomes true
       quit = true;
 
     if(quit == true || runNext == false) // If exit has been found or if the connector "refuses" to execute the next command, stop trying executing the rest of the command line
@@ -296,7 +294,6 @@ void ParsedCommand::execute(bool &quit)
     {
       execvp(args[0], args);
       perror("Error: execvp failed");
-      fail = true;
     }
     else if(c_pid > 0)
     {
@@ -309,20 +306,11 @@ void ParsedCommand::execute(bool &quit)
     
     if(WIFEXITED(status)) // The child process ended normally
     {
-      if(WEXITSTATUS(status) != 0)
+      if(WEXITSTATUS(status) == 0)
       {
-        fail = true; 
-      }
-      else
-      {
-        success = true;
+        success = true; 
       }
     }
-    else
-    {
-      fail = true;
-    }
-    runNext = getCommand(i).runNext(success, fail);
+    runNext = getCommand(i).runNext(success);
   }
 }
-

@@ -42,9 +42,9 @@ void Command::setConnector(Connector c)
   connector = Connector(c);
 }
 
-bool Command::runNext(bool success, bool fail)
+bool Command::runNext(bool success)
 {
-  if(getConnector().getNeedSuccess() == success && getConnector().getNeedFail() == fail) 
+  if(getConnector().getNeedSuccess() == success) 
   {
     return true;
   }

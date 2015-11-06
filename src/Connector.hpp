@@ -20,7 +20,7 @@ class Connector
      * \param bool fail the boolean that indicates whether the connector need the fail of the previous instruction to run the next one.
      * \return A new Connector object.
      */
-    Connector(std::string r, bool success, bool fail);
+    Connector(std::string r, bool success/*, bool fail*/);
     /** 
      * \brief Connector destructor.
      */
@@ -46,16 +46,6 @@ class Connector
      * \param bool success: false if the success is not needed; true if it is.
      */
     void setNeedSuccess(bool success);
-    /**
-     * \brief Indicates if the connector needs the previous instruction to have failed to run the next one.
-     * \return A boolean: false if the fail is not needed, true if it is.
-     */
-    bool getNeedFail();
-    /**
-     * \brief Sets the "needs fail of the previous instruction to run the next one" condition.
-     * \param bool fail: false if the fail is not needed; true if it is.
-     */
-    void setNeedFail(bool fail);
 
   protected:
     /**
@@ -66,10 +56,6 @@ class Connector
      * \brief "Needs success of the previous instruction to run the next one" condition.
      */
     bool needSuccess;
-    /**
-     * \brief "Needs fail of the previous instruction to run the next one" condition.
-     */
-    bool needFail;
 };
 
 #endif

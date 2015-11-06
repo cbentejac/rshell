@@ -35,7 +35,7 @@ class Arguments {
      */
     void setArguments(std::string arg);
     /**
-     * \brief Prints the arguments list on the standard outît stream.
+     * \brief Prints the arguments list on the standard output stream.
      */
     void readArguments();
 
