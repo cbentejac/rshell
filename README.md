@@ -34,7 +34,7 @@ In order to distinguish the normal shell from the *_rshell_*, € will be used i
 - Makefile (voir création d'une arborescence interne à src car beaucoup de fichiers)
 - Rédaction du README.md (in English please).
 
-# Author
+## Author
 Candice Bentéjac
 
 Université de Bordeaux / University of California, Riverside
