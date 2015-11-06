@@ -248,15 +248,15 @@ void ParsedCommand::parse()
   }
 }
 
-void ParsedCommand::execute()
+void ParsedCommand::execute(bool &quit)
 {
-  cout << getLine() << endl << endl;
+  parse();
+
   bool runNext = true; // Will the next instruction be ran? By default, true in case the connector is a semicolon
-  bool quit = false; // Exit rshell? By default, false because it must be triggered by the user
+ // bool quit = false; // Exit rshell? By default, false because it must be triggered by the user
 
   for(unsigned i = 0;  i < getCommandVector().size(); i++)
   {
-    //cout << getCommand(i).getExecutable().getExecutable() << " " << getCommand(i).getArguments().getArguments() << getCommand(i).getConnector().getRepresentation() << endl << endl;
     bool success = false;
     bool fail = false;
     
@@ -265,6 +265,8 @@ void ParsedCommand::execute()
 
     if(quit == true || runNext == false) // If exit has been found or if the connector "refuses" to execute the next command, stop trying executing the rest of the command line
     {
+      if(quit)
+        cout << "Exiting rshell." << endl << endl;
       break;
     }
 
@@ -314,13 +316,3 @@ void ParsedCommand::execute()
   }
 }
 
-int main(int argc, char * argv[])
-{
-  ParsedCommand cmd("echo 'hello' && ls -a; ps"); 
-
-  cmd.parse();
-  cmd.execute();
-
-  
-  return 0;
-}
