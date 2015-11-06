@@ -1,3 +1,10 @@
+/**
+ * \file Semicolon.hpp
+ * \author Candice Bentejac
+ * \date November 6, 2015
+ * \brief Header for the Semicolon class, which inherits from the Connector class.
+ */
+
 #ifndef _SEMICOLON_HPP_
 #define _SEMICOLON_HPP_
 
@@ -6,7 +13,14 @@
 class Semicolon : public Connector 
 {
   public:
+    /**
+     * \brief Semicolon constructor.
+     * \return A Semicolon object.
+     */
     Semicolon();
+    /**
+     * \brief Semicolon destructor.
+     */
     ~Semicolon();
 };
 
