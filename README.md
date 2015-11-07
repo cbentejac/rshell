@@ -60,12 +60,6 @@ To run **rshell** from the root, type `$ bin/rshell`. Then type any command. **r
 
 - If the connectors are not separated from the rest of the command line by spaces, then they're not recognized as connectors but as arguments, which often leads to an execution problem.
 
-# Bugs à résoudre
-
-- Problème avec les connnecteurs && et || (ne pas oublier ; qui ne devrait pas fonctionner s'il colle l'exécutable de la commande suivante) lorsqu'ils sont collés à la liste d'arguments qu'ils suivent ou l'exécutable qu'ils précèdent.
-
-	=> DEVRAIT SE FAIRE AU MOMENT DE SEPARATE() !!! Dans Parse.cpp (en local), toutes les fonctions (ou presque) permettant de traiter ces cas ont été écrites, il suffit donc de les copier/coller et de les réutiliser. Si le temps, écrire une fonction qui regroupe toutes ces fonctions ou qui d'office vérifie tous ces cas sans faire appel à trop de fonctions annexes (dans l'idéal).
-
 
 # A finir 
 - Tests
