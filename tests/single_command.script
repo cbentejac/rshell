@@ -1,0 +1,56 @@
+Script started on Sat 07 Nov 2015 12:01:46 AM PST
+[cbent002@hammer rshell]$ make
+make rshell
+make[1]: Entering directory `/home/csmajs/cbent002/CS100/rshell'
+mkdir -p bin; \
+	g++ -Wall -Werror -ansi -pedantic src/rshell.cpp src/Connector.cpp src/Semicolon.cpp src/DoubleAnd.cpp src/DoubleOr.cpp src/Arguments.cpp src/Executable.cpp src/Command.cpp src/ParsedCommand.cpp -o rshell; \
+	mv rshell ./bin
+make[1]: Leaving directory `/home/csmajs/cbent002/CS100/rshell'
+[cbent002@hammer rshell]$ bin/rshell
+Entering rshell.
+
+[cbent002@hammer.cs.ucr.edu]€ ls -a
+.   bin	  LICENSE   README.md	    single_command.script  tests
+..  .git  Makefile  .README.md.swp  src
+[cbent002@hammer.cs.ucr.edu]€ echo hello
+hello
+[cbent002@hammer.cs.ucr.edu]€ echo "hello world"
+"hello world"
+[cbent002@hammer.cs.ucr.edu]€ echo hello world
+hello world
+[cbent002@hammer.cs.ucr.edu]€ mkdir test
+[cbent002@hammer.cs.ucr.edu]€ mkdir test
+mkdir: cannot create directory `test': File exists
+[cbent002@hammer.cs.ucr.edu]€ rmd-r test
+[cbent002@hammer.cs.ucr.edu]€ ls -a -l
+total 56
+drwxr-xr-x 6 cbent002 csmajs  4096 Nov	7 00:02 .
+drwxr-xr-x 9 cbent002 csmajs  4096 Nov	6 17:13 ..
+drwxr-xr-x 2 cbent002 csmajs  4096 Nov	7 00:01 bin
+drwxr-xr-x 8 cbent002 csmajs  4096 Nov	7 00:00 .git
+-rw-r--r-- 1 cbent002 csmajs  1474 Oct 27 00:03 LICENSE
+-rw-r--r-- 1 cbent002 csmajs   396 Nov	6 18:24 Makefile
+-rw-r--r-- 1 cbent002 csmajs  3716 Nov	6 22:58 README.md
+-rw-r--r-- 1 cbent002 csmajs 20480 Nov	6 22:58 .README.md.swp
+-rw-r--r-- 1 cbent002 csmajs	 0 Nov	7 00:01 single_command.script
+drwxr-xr-x 2 cbent002 csmajs  4096 Nov	6 23:58 src
+drwxr-xr-x 2 cbent002 csmajs  4096 Oct 27 00:06 tests
+[cbent002@hammer.cs.ucr.edu]€ ls -al
+total 56
+drwxr-xr-x 6 cbent002 csmajs  4096 Nov	7 00:02 .
+drwxr-xr-x 9 cbent002 csmajs  4096 Nov	6 17:13 ..
+drwxr-xr-x 2 cbent002 csmajs  4096 Nov	7 00:01 bin
+drwxr-xr-x 8 cbent002 csmajs  4096 Nov	7 00:00 .git
+-rw-r--r-- 1 cbent002 csmajs  1474 Oct 27 00:03 LICENSE
+-rw-r--r-- 1 cbent002 csmajs   396 Nov	6 18:24 Makefile
+-rw-r--r-- 1 cbent002 csmajs  3716 Nov	6 22:58 README.md
+-rw-r--r-- 1 cbent002 csmajs 20480 Nov	6 22:58 .README.md.swp
+-rw-r--r-- 1 cbent002 csmajs	 0 Nov	7 00:01 single_command.script
+drwxr-xr-x 2 cbent002 csmajs  4096 Nov	6 23:58 src
+drwxr-xr-x 2 cbent002 csmajs  4096 Oct 27 00:06 tests
+[cbent002@hammer.cs.ucr.edu]€ exit
+Exiting rshell.
+
+[cbent002@hammer rshell]$ exit
+
+Script done on Sat 07 Nov 2015 12:02:37 AM PST

@@ -1,0 +1,69 @@
+Script started on Sat 07 Nov 2015 12:04:45 AM PST
+[cbent002@hammer rshell]$ make
+make rshell
+make[1]: Entering directory `/home/csmajs/cbent002/CS100/rshell'
+mkdir -p bin; \
+	g++ -Wall -Werror -ansi -pedantic src/rshell.cpp src/Connector.cpp src/Semicolon.cpp src/DoubleAnd.cpp src/DoubleOr.cpp src/Arguments.cpp src/Executable.cpp src/Command.cpp src/ParsedCommand.cpp -o rshell; \
+	mv rshell ./bin
+make[1]: Leaving directory `/home/csmajs/cbent002/CS100/rshell'
+[cbent002@hammer rshell]$ bin/rshell
+Entering rshell.
+
+[cbent002@hammer.cs.ucr.edu]€ ls # d fohsidf
+bin			  LICENSE   README.md		   src
+commented_command.script  Makefile  single_command.script  tests
+[cbent002@hammer.cs.ucr.edu]€ #sdfhosd
+[cbent002@hammer.cs.ucr.edu]€
+[cbent002@hammer.cs.ucr.edu]€ ls -a #-l
+.   bin			      .git     Makefile	  .README.md.swp	 src
+..  commented_command.script  LICENSE  README.md  single_command.script	 tests
+[cbent002@hammer.cs.ucr.edu]€ ls -lR #/
+.:
+total 28
+drwxr-xr-x 2 cbent002 csmajs 4096 Nov  7 00:04 bin
+-rw-r--r-- 1 cbent002 csmajs	0 Nov  7 00:04 commented_command.script
+-rw-r--r-- 1 cbent002 csmajs 1474 Oct 27 00:03 LICENSE
+-rw-r--r-- 1 cbent002 csmajs  396 Nov  6 18:24 Makefile
+-rw-r--r-- 1 cbent002 csmajs 3710 Nov  7 00:04 README.md
+-rw-r--r-- 1 cbent002 csmajs 2684 Nov  7 00:02 single_command.script
+drwxr-xr-x 2 cbent002 csmajs 4096 Nov  6 23:58 src
+drwxr-xr-x 2 cbent002 csmajs 4096 Oct 27 00:06 tests
+
+./bin:
+total 80
+-rwxr-xr-x 1 cbent002 csmajs 78006 Nov	7 00:04 rshell
+
+./src:
+total 396
+-rw-r--r-- 1 cbent002 csmajs	468 Nov	 6 19:38 Arguments.cpp
+-rw-r--r-- 1 cbent002 csmajs   1033 Nov	 6 19:38 Arguments.hpp
+-rw-r--r-- 1 cbent002 csmajs	284 Nov	 6 19:37 Base.hpp
+-rwxr-xr-x 1 cbent002 csmajs 299127 Nov	 6 23:14 cmd
+-rw-r--r-- 1 cbent002 csmajs   1174 Nov	 6 20:16 Command.cpp
+-rw-r--r-- 1 cbent002 csmajs   2406 Nov	 6 19:44 Command.hpp
+-rw-r--r-- 1 cbent002 csmajs	584 Nov	 6 19:41 Connector.cpp
+-rw-r--r-- 1 cbent002 csmajs   1685 Nov	 6 19:40 Connector.hpp
+-rw-r--r-- 1 cbent002 csmajs	263 Nov	 6 16:31 DoubleAnd.cpp
+-rw-r--r-- 1 cbent002 csmajs	466 Nov	 6 19:42 DoubleAnd.hpp
+-rw-r--r-- 1 cbent002 csmajs	257 Nov	 6 16:33 DoubleOr.cpp
+-rw-r--r-- 1 cbent002 csmajs	456 Nov	 6 19:42 DoubleOr.hpp
+-rw-r--r-- 1 cbent002 csmajs	480 Nov	 6 16:34 Executable.cpp
+-rw-r--r-- 1 cbent002 csmajs   1085 Nov	 6 19:43 Executable.hpp
+-rw-r--r-- 1 cbent002 csmajs	183 Nov	 5 11:56 Makefile
+-rw-r--r-- 1 cbent002 csmajs   9334 Nov	 6 21:23 Parse.cpp
+-rw-r--r-- 1 cbent002 csmajs  10825 Nov	 6 23:57 ParsedCommand.cpp
+-rw-r--r-- 1 cbent002 csmajs   3084 Nov	 6 22:42 ParsedCommand.hpp
+-rw-r--r-- 1 cbent002 csmajs   1335 Nov	 3 18:05 Parse.hpp
+-rw-r--r-- 1 cbent002 csmajs	985 Nov	 6 23:10 rshell.cpp
+-rw-r--r-- 1 cbent002 csmajs	264 Nov	 6 16:35 Semicolon.cpp
+-rw-r--r-- 1 cbent002 csmajs	473 Nov	 6 19:42 Semicolon.hpp
+
+./tests:
+total 0
+[cbent002@hammer.cs.ucr.edu]€ #exit
+[cbent002@hammer.cs.ucr.edu]€ exit
+Exiting rshell.
+
+[cbent002@hammer rshell]$ exit
+
+Script done on Sat 07 Nov 2015 12:05:31 AM PST

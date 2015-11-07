@@ -1,0 +1,93 @@
+Script started on Sat 07 Nov 2015 12:05:49 AM PST
+[cbent002@hammer rshell]$ make
+make rshell
+make[1]: Entering directory `/home/csmajs/cbent002/CS100/rshell'
+mkdir -p bin; \
+	g++ -Wall -Werror -ansi -pedantic src/rshell.cpp src/Connector.cpp src/Semicolon.cpp src/DoubleAnd.cpp src/DoubleOr.cpp src/Arguments.cpp src/Executable.cpp src/Command.cpp src/ParsedCommand.cpp -o rshell; \
+	mv rshell ./bin
+make[1]: Leaving directory `/home/csmajs/cbent002/CS100/rshell'
+[cbent002@hammer rshell]$ bin/rshell
+Entering rshell.
+
+[cbent002@hammer.cs.ucr.edu]€ ls -a; echo hello; mkdir test
+.			  .git			README.md	       tests
+..			  LICENSE		.README.md.swp
+bin			  Makefile		single_command.script
+commented_command.script  multi_command.script	src
+hello
+[cbent002@hammer.cs.ucr.edu]€ ls -a; echo hello && mkdir test || echo world; git status
+.    commented_command.script  Makefile		     .README.md.swp	    test
+..   .git		       multi_command.script  single_command.script  tests
+bin  LICENSE		       README.md	     src
+hello
+mkdir: cannot create directory `test': File exists
+world
+# On branch exec
+# Changes not staged for commit:
+#   (use "git add <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working directory)
+#
+#	modified:   README.md
+#
+# Untracked files:
+#   (use "git add <file>..." to include in what will be committed)
+#
+#	.README.md.swp
+#	bin/
+#	commented_command.script
+#	multi_command.script
+#	single_command.script
+#	src/Makefile
+#	src/Parse.cpp
+#	src/Parse.hpp
+#	src/cmd
+no changes added to commit (use "git add" and/or "git commit -a")
+[cbent002@hammer.cs.ucr.edu]€ ls -a&&ps
+.    commented_command.script  Makefile		     .README.md.swp	    test
+..   .git		       multi_command.script  single_command.script  tests
+bin  LICENSE		       README.md	     src
+  PID TTY	   TIME CMD
+  680 pts/10   00:00:00 rshell
+  877 pts/10   00:00:00 ps
+49124 pts/10   00:00:00 bash
+[cbent002@hammer.cs.ucr.edu]€ ls -a&& ps
+.    commented_command.script  Makefile		     .README.md.swp	    test
+..   .git		       multi_command.script  single_command.script  tests
+bin  LICENSE		       README.md	     src
+  PID TTY	   TIME CMD
+  680 pts/10   00:00:00 rshell
+  885 pts/10   00:00:00 ps
+49124 pts/10   00:00:00 bash
+[cbent002@hammer.cs.ucr.edu]€ ls -a &&ps
+.    commented_command.script  Makefile		     .README.md.swp	    test
+..   .git		       multi_command.script  single_command.script  tests
+bin  LICENSE		       README.md	     src
+  PID TTY	   TIME CMD
+  680 pts/10   00:00:00 rshell
+  897 pts/10   00:00:00 ps
+49124 pts/10   00:00:00 bash
+[cbent002@hammer.cs.ucr.edu]€ ls -aaa || ps
+.    commented_command.script  Makefile		     .README.md.swp	    test
+..   .git		       multi_command.script  single_command.script  tests
+bin  LICENSE		       README.md	     src
+[cbent002@hammer.cs.ucr.edu]€ mkdir test || ps
+mkdir: cannot create directory `test': File exists
+  PID TTY	   TIME CMD
+  680 pts/10   00:00:00 rshell
+  919 pts/10   00:00:00 ps
+49124 pts/10   00:00:00 bash
+[cbent002@hammer.cs.ucr.edu]€ lsd-a &&&&&&&&&& ps
+.    commented_command.script  Makefile		     .README.md.swp	    test
+..   .git		       multi_command.script  single_command.script  tests
+bin  LICENSE		       README.md	     src
+Error: execvp failed: No such file or directory
+Error: execvp failed: No such file or directory
+Error: execvp failed: No such file or directory
+Error: execvp failed: No such file or directory
+Error: execvp failed: No such file or directory
+Error: execvp failed: No such file or directory
+Error: execvp failed: No such file or directory
+Error: execvp failed: No such file or directory
+  PID TTY	   TIME CMD
+  680 pts/10   00:00:00 rshell
+  926 pts/10   00:00:00 r

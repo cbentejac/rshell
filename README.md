@@ -45,7 +45,6 @@ To run **rshell** from the root, type `$ bin/rshell`. Then type any command. **r
 
 - If a command is spelled incorrectly or doesn't exist and thus leads to a fail of `execvp`, it is impossible to directly exit **rshell** using the `exit`command. As an example, if three commands lead to a fail of `execvp`, it will be necessary to run `exit` three times before it becomes effective. _It's like `exit` had to go through a stack of failed commands to be effective._
 
-- In the command `€ ls -lR /`, the `/` character is considered as an unvalid option and the command consequently fails.
 
 - If there are several connectors following each other (like `&& && && &&`) or a sequence of characters corresponding to the connectors (like `||||||||`), **rshell** tries to execute and fails.
 
@@ -60,11 +59,7 @@ To run **rshell** from the root, type `$ bin/rshell`. Then type any command. **r
 
 - If the connectors are not separated from the rest of the command line by spaces, then they're not recognized as connectors but as arguments, which often leads to an execution problem.
 
-
-# A finir 
-- Tests
-- Rédaction du README.md (in English please).
-
+- In the command `€ ls -lR /`, the `/` character is considered as an unvalid option and the command consequently fails. _The problem was actually linked to the number of arguments._
 
 ## Author
 Candice Bentéjac (cbent002)
