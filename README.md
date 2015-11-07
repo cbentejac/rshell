@@ -53,7 +53,7 @@ To run **rshell** from the root, type `$ bin/rshell`. Then type any command. **r
 - In the command `€ ls -lR /`, the `/` character is considered as an unvalid option and the command consequently fails.
 
 ### Fixed bugs
-- Commands that can normally be ran with or without arguments fail if the user tries to run them without arguments.
+- Commands that can normally be run with or without arguments fail if the user tries to run them without arguments.
 
 - `exit` is always executed, no matter the value of the connector. Ex: `ls -a || exit` will still exit, even though `ls -a` was successfully executed.
 
@@ -68,8 +68,6 @@ To run **rshell** from the root, type `$ bin/rshell`. Then type any command. **r
 
 # A finir 
 - Tests
-- Commentaires dans les HPP : suivre le format précédemment utilisé. La doc pourra être générée avec Doxygen (penser à vérifier avant l'envoi final, au cas où), le préciser dans le README.md.
-- Makefile (voir création d'une arborescence interne à src car beaucoup de fichiers)
 - Rédaction du README.md (in English please).
 
 
