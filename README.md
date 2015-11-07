@@ -39,17 +39,15 @@ To run **rshell** from the root, type `$ bin/rshell`. Then type any command. **r
 ```
 
 ## Known bugs
-- If the connectors are not separated from the rest of the command line by spaces, then they're not recognized as connectors but as arguments, which often leads to an execution problem.
-
-
-
 - The `cd` isn't recognized and thus systematically fails.
 
-- If the command is an `echo` and the user has surrounded the message to display with simple or double quotes, **rshell** will also display these quotes, unlike **bash**.
+- If the command is an `echo` and the user has surrounded the message to display with simple or double quotes, **rshell** will also display these quotes, unlike **bash**. On the other side, **rshell** won't display the connector with `echo`, even if they're between quotes.
 
 - If a command is spelled incorrectly or doesn't exist and thus leads to a fail of `execvp`, it is impossible to directly exit **rshell** using the `exit`command. As an example, if three commands lead to a fail of `execvp`, it will be necessary to run `exit` three times before it becomes effective. _It's like `exit` had to go through a stack of failed commands to be effective._
 
 - In the command `€ ls -lR /`, the `/` character is considered as an unvalid option and the command consequently fails.
+
+- If there are several connectors following each other (like `&& && && &&`) or a sequence of characters corresponding to the connectors (like `||||||||`), **rshell** tries to execute and fails.
 
 ### Fixed bugs
 - Commands that can normally be run with or without arguments fail if the user tries to run them without arguments.
@@ -59,6 +57,8 @@ To run **rshell** from the root, type `$ bin/rshell`. Then type any command. **r
 - If the command line is empty, the program will still try to execute it, which leads to an `execvp` error message.
 
 - If the last command (meaning that there's nothing to execute after it) ends with a connector that is not a semicolon, the program tries to execute an empty command, which is a case similar to the "empty line" bug.
+
+- If the connectors are not separated from the rest of the command line by spaces, then they're not recognized as connectors but as arguments, which often leads to an execution problem.
 
 # Bugs à résoudre
 
