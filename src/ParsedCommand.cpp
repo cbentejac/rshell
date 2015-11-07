@@ -96,6 +96,45 @@ void ParsedCommand::setCommandVector(vector<Command> v)
 }
 
 
+// Add spaces between connectors (&& and || only )and the rest of the command line
+void ParsedCommand::addSpaces()
+{
+  string str = getLine();
+  string newStr;
+
+  char* str_conv = const_cast<char*>(str.c_str());
+  char* token = strtok(str_conv, " ");
+
+  while (token != NULL)
+  {
+    string tmp(token);
+    for (unsigned i = 0; i < tmp.size() - 1; i++)
+    {
+      if(tmp[i] == '&')
+      {
+        if(tmp[i + 1] == '&')
+	{
+	  newStr += " ";
+	}
+      }
+      else if (tmp[i] == '|')
+      {
+        if(tmp[i + 1] == '|')
+	{
+          newStr += " ";	
+	}
+      }
+      newStr += tmp[i];
+    }
+    newStr += tmp[tmp.size() - 1];
+
+    token = strtok(NULL, " ");
+  }
+
+  setLine(newStr);
+}
+
+
 // True if token ends with a semicolon
 static bool endWithSemicolon(char* token) 
 {
@@ -169,8 +208,6 @@ static Connector recognizeConnector(char* str)
 }
 
 
-
-
 // Removes comments from the command line typed by the user 
 void ParsedCommand::stripComments() 
 {
@@ -188,6 +225,7 @@ void ParsedCommand::stripComments()
 vector<string> ParsedCommand::separateCommands() 
 {
   vector<string> v;
+  addSpaces();
   trimLine();
   string str = getLine();
   
