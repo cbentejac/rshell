@@ -38,13 +38,13 @@ class ParsedCommand {
     
     /**
      * \brief Returns the object Command at the index i in the vector commands.
-     * \param unsigned i the index in the vector commands that contains the wanted Command.
-     * \return The Command object present at the index i of the vector commands.
+     * \param unsigned i the index of the Command in the vector commands.
+     * \return The Command object at the index i of the vector commands.
      */
     Command getCommand(unsigned i); 
     /**
      * \brief Sets the object Command at the index i in the vector commands.
-     * \param unsigned i the index in the vector commands that contains the wanted Command.
+     * \param unsigned i the index of the Command in the vector commands.
      * \param Command c the new Command object.
      */
     void setCommand(unsigned i, Command c);
@@ -71,7 +71,7 @@ class ParsedCommand {
     void stripComments();
     /**
      * \brief Separate the user input into different command strings.
-     * \return A string vector containing string that correspond to stand-alone commands.
+     * \return A string vector where a string corresponds to a single command.
      */
     std::vector<std::string> separateCommands();
     /**
@@ -85,8 +85,8 @@ class ParsedCommand {
      */
     void parse();
     /** 
-     * \brief Executes the commands contained in the vector commands, respecting the connectors logic.
-     * \param bool &quit the boolean that indicates whether or not the user has entered the "exit" command.
+     * \brief Executes the commands contained in the vector commands.
+     * \param bool &quit: true if the user has entered "exit"; false if not.
      */
     void execute(bool &quit);
   
@@ -96,7 +96,8 @@ class ParsedCommand {
      */
     std::string commandLine;
     /**
-     * \brief The vector containing all the Command objects that represent the different stand-alone commands the user typed on a single line.
+     * \brief The vector containing all the Command objects that represent the 
+     * different single commands the user typed on a single line.
      */
     std::vector<Command> commands;
 };

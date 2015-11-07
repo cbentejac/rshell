@@ -47,18 +47,30 @@ Command ParsedCommand::getCommand(unsigned i) // Returns the Command contained
 void ParsedCommand::setCommand(unsigned i, Command c)
 {
   assert(i < commands.size()); // Checks that i isn't out of range
-  if(c.getConnector().getRepresentation() == ";")
-    commands[i] = Command(c.getExecutable().getExecutable(), c.getArguments().getArguments(), Semicolon());
-  if(c.getConnector().getRepresentation() == "&&")
-    commands[i] = Command(c.getExecutable().getExecutable(), c.getArguments().getArguments(), DoubleAnd());
-  if(c.getConnector().getRepresentation() == "||")
-    commands[i] = Command(c.getExecutable().getExecutable(), c.getArguments().getArguments(), DoubleOr());    
+  if (c.getConnector().getRepresentation() == ";")
+    commands[i] = Command(c.getExecutable().getExecutable(), 
+                          c.getArguments().getArguments(), 
+			  Semicolon()
+			 );
+  if (c.getConnector().getRepresentation() == "&&")
+    commands[i] = Command(c.getExecutable().getExecutable(), 
+                          c.getArguments().getArguments(), 
+			  DoubleAnd()
+			 );
+  if (c.getConnector().getRepresentation() == "||")
+    commands[i] = Command(c.getExecutable().getExecutable(), 
+                          c.getArguments().getArguments(), 
+			  DoubleOr()
+			 );    
 }
 
 
 void ParsedCommand::addCommand(Command c)
 {
-  commands.push_back(Command(c.getExecutable().getExecutable(), c.getArguments().getArguments(), c.getConnector()));
+  commands.push_back(Command(c.getExecutable().getExecutable(), 
+                     c.getArguments().getArguments(), 
+                     c.getConnector())
+                    );
 }
 
 
@@ -71,21 +83,23 @@ vector<Command> ParsedCommand::getCommandVector()
 void ParsedCommand::setCommandVector(vector<Command> v)
 {
   commands.clear(); // Clears commands before refilling it
-  for(unsigned i; i < v.size(); i++)
+  for (unsigned i; i < v.size(); i++)
     commands.push_back(getCommand(i));
 }
 
 
-static bool endWithSemicolon(char* token) // True if token ends with a semicolon; false if it doesn't
+// True if token ends with a semicolon
+static bool endWithSemicolon(char* token) 
 {
   string s(token);
-  if(s[s.size() - 1] == ';')
+  if (s[s.size() - 1] == ';')
     return true;
   return false;
 }
 
 
-static bool isConnector(char* str) // Returns true if str is a connector representation
+// Returns true if str is a connector representation 
+static bool isConnector(char* str) 
 {
   vector<Connector> v;
   v.push_back(Semicolon());
@@ -93,14 +107,15 @@ static bool isConnector(char* str) // Returns true if str is a connector represe
   v.push_back(DoubleOr());
 
   string s(str);
-  for(unsigned i = 0; i < v.size(); i++)
-    if(s == v[i].getRepresentation())
+  for (unsigned i = 0; i < v.size(); i++)
+    if (s == v[i].getRepresentation())
       return true;
   return false;
 }
 
 
-static Connector recognizeConnector(char* str) // Returns the connector corresponding to a string representation
+// Returns the connector corresponding to a string representation
+static Connector recognizeConnector(char* str)
 {
   assert(isConnector(str)); // Checks that str is a connector
 
@@ -110,68 +125,80 @@ static Connector recognizeConnector(char* str) // Returns the connector correspo
   v.push_back(DoubleOr());
 
   string s(str);
-  for(unsigned i = 0; i < v.size(); i++)
-    if(s == v[i].getRepresentation())
+  for (unsigned i = 0; i < v.size(); i++)
+    if (s == v[i].getRepresentation())
       return v[i];
 
-  return Semicolon(); // Should never be reached, but if there is no correspondance, return a semicolon connector
+  return Semicolon(); // Should never be reached, but just in case
 }
 
 
-void ParsedCommand::stripComments() // Removes comments from the command line typed by the user
+// Removes comments from the command line typed by the user 
+void ParsedCommand::stripComments() 
 {
   string str(getLine());
-  char* search(strchr(const_cast<char*>(str.c_str()), '#')); //  Searches for the integer corresponding to # and return a pointer to the first occurence
+  // Searches for the integer corresponding to # 
+  char* search(strchr(const_cast<char*>(str.c_str()), '#')); 
 
-  if(search != NULL) // If an occurrence has been found, the pointer is not NULL
-    setLine(getLine().substr(0, getLine().size()-(strlen(search)))); // Removes the part of the original command line that starts with # 
+  if (search != NULL) // If an occurrence has been found, pointer is not NULL
+    // Removes the part of the original command line that starts with #
+    setLine(getLine().substr(0, getLine().size()-(strlen(search))));  
 }
 
 
-vector<string> ParsedCommand::separateCommands() // Separates the command line in distinct commands
+// Separates the command line in distinct commands
+vector<string> ParsedCommand::separateCommands() 
 {
   vector<string> v;
   string str = getLine();
-  unsigned j = 0; // Position of the last separation made in the command line
-
-  if(!endWithSemicolon(const_cast<char*>(str.c_str()))) // If the user input doesn't end with a semicolon, adds one (helps avoiding bugs later)
-    str += ";";
   
-  for(unsigned i = 0; i < str.size(); i++)
+  if (!getLine().empty()) // Checks that the command line is not empty; if true:
+  // Directly return v to avoid trying to execute later an empty Command
   {
-    if(str[i] == ';') // If the ; connector is found, extracts then adds the substring to the vector commands
-    {
-      string tmp;
-      for(j = j; j <= i; j++)
-        tmp += str[j];
-      v.push_back(tmp);
-    }
-    
-    if(str[i] == '&') // If a & character is found
-    {
-      assert(i + 1 < str.size()); // Checks that there's at least one character after it (to avoid "index out of range")
-      if(str[i + 1] == '&') // If another & is found, then extracts and adds the substring (with connector &&) to the vector commands
-      {
-        string tmp;
-        for(j = j; j <= i + 1; j++)
-	  tmp += str[j];
-	v.push_back(tmp);
-      }
-    }
+    unsigned j = 0; // Position of the last separation made in the command line
 
-    if(str[i] == '|') // If a | character is found
+    // If the user input doesn't end with a semicolon, adds one 
+    if (!endWithSemicolon(const_cast<char*>(str.c_str())))
+      str += ";";
+  
+    for (unsigned i = 0; i < str.size(); i++)
     {
-      assert(i + 1 < str.size()); // Checks that there's at least one character after it (to avoid "index out of range")
-      if(str[i + 1] == '|') // If another | is found, then extracts and adds the substring (with connector ||) to the vector commands
+      // If the ";" connector is found, extracts and adds the substring
+      if (str[i] == ';')
       {
         string tmp;
-	for(j = j; j <= i + 1; j++)
-	  tmp += str[j];
-	v.push_back(tmp);
+        for (j = j; j <= i; j++)
+          tmp += str[j]; // Extracts the substring by copiing it
+        v.push_back(tmp);
+      }
+     
+      if (str[i] == '&') // If a "&" character is found
+      {
+        // Checks that there's at least one character after this one 
+	assert(i + 1 < str.size()); 
+	// If another & is found, extracts and adds the substring to the vector
+        if (str[i + 1] == '&') 
+        {
+          string tmp;
+          for (j = j; j <= i + 1; j++)
+  	    tmp += str[j];
+          v.push_back(tmp);
+        }
+      }
+
+      if (str[i] == '|') // Same if a "|" character is found
+      {
+        assert(i + 1 < str.size()); 
+        if (str[i + 1] == '|') 
+        {
+          string tmp;
+	  for (j = j; j <= i + 1; j++)
+	    tmp += str[j];
+          v.push_back(tmp);
+        }
       }
     }
   }
-
   return v;
 }
 
@@ -181,19 +208,19 @@ Command ParsedCommand::createCommand(string command)
   char* str_conv(const_cast<char*>(command.c_str()));
   char* token(strtok(str_conv, " ")); // Launches tokenization
 
-  unsigned cpt = 0; // Allows us to distinguish the executable from any arguments in the while loop 
-  // If cpt == 0, then it's the first time in the loop and the string is necessarily an executable)
+  unsigned cpt = 0; // To distinguish the executable from arguments in the loop
+  // cpt == 0: 1st time in the loop and the string is necessarily an executable
 
   // Initialization of the command elements;
   string ex;
   string arg;
   Connector c = Semicolon();
 
-  while(token != NULL)
+  while (token != NULL)
   {
-    if(cpt == 0) // First element of the command to parse, so it must be an executable
+    if (cpt == 0) // First element of the command to parse = executable
     { 
-      if(endWithSemicolon(token))
+      if (endWithSemicolon(token))
       { 
         ex = "" + string(token);
 	ex = ex.substr(0, ex.size() - 1);
@@ -208,14 +235,18 @@ Command ParsedCommand::createCommand(string command)
     }
     else
     {
-      if(isConnector(token)) // If it's a connector, recognize it
+      if (isConnector(token)) // If it's a connector, recognize it
         c = recognizeConnector(token);
-
-      else // If it's not an executable and not a connector, then it's an argument (if there's no argument, this loop won't be reached)
+      
+      // If it's not an executable and not a connector, then it's an argument
+      // (If there's no argument, this loop won't be reached)
+      else 
       {
-	if(endWithSemicolon(token)) // Checks if it's the last element of the command
+        // Checks if it's the last element of the command
+	if (endWithSemicolon(token)) 
 	{ 
-	  if(!(arg.empty())) // If it's not the first argument for this command, adds a space between them
+	  // If it's not the 1st argument for this command, adds a space
+	  if (!(arg.empty())) 
 	    arg += " ";
 
           arg += "" + string(token);
@@ -224,7 +255,7 @@ Command ParsedCommand::createCommand(string command)
         }
 	else
 	{
-	  if(!(arg.empty()))
+	  if (!(arg.empty()))
 	    arg += " ";
 
           arg += "" + string(token);
@@ -234,7 +265,7 @@ Command ParsedCommand::createCommand(string command)
     token = strtok(NULL, " "); 
   }
   
-  Command cmd(ex, arg, c); // Create the Command object associeted with the string
+  Command cmd(ex, arg, c); // Create the Command object with the string
   return cmd; // The parsed command is added to the vector
 }
 
@@ -242,50 +273,62 @@ Command ParsedCommand::createCommand(string command)
 void ParsedCommand::parse()
 {
   stripComments(); // Eliminates the comments from the command line
-  vector<string> v = separateCommands(); // Separates the different commands so that we can treat them one by one
+  // Separates the different commands so that we can parse them one by one
+  vector<string> v = separateCommands(); 
 
-  for(unsigned i = 0; i < v.size(); i++)
+  for (unsigned i = 0; i < v.size(); i++)
   {
     Command c = createCommand(v[i]);
     addCommand(c);
   }
 }
 
-static bool emptyArguments(Command cmd) // Checks if a command as an empty list of arguments (used to avoid bugs with commands like ls)
+
+// Checks if a command has an empty line of arguments; used to avoid later bugs
+static bool emptyArguments(Command cmd)
 {
-  if(cmd.getArguments().getArguments() == "")
+  if (cmd.getArguments().getArguments() == "")
     return true;
   return false;
 }
+
 
 void ParsedCommand::execute(bool &quit)
 {
   parse();
 
-  bool runNext = true; // Will the next instruction be ran? By default, true in case the connector is a semicolon
+  // Will the next instruction be run? By default, false
+  bool runNext = true; 
 
-  for(unsigned i = 0;  i < getCommandVector().size(); i++)
-  {
-    bool success = false; // Has the command been ran normally? By default, let's say it's not the case
+  for (unsigned i = 0;  i < getCommandVector().size(); i++)
+  { 
+    // Has the command been run normally? By default, false
+    bool success = false; 
     
-    if(getCommand(i).getExecutable().getExecutable() == "exit" && runNext == true) // If exit is the executable and the next instruction is to be ran:
+    // If exist is the executable and the next instruction is to be run
+    if (getCommand(i).getExecutable().getExecutable() == "exit" && 
+        runNext == true) 
     // quit value becomes true
       quit = true;
 
-    if(quit == true || runNext == false) // If exit has been found or if the connector "refuses" to execute the next command:
+    // If exit has been found or if the connector "refuses" the next command:
+    if (quit == true || runNext == false) 
     // Stop trying executing the rest of the command line
     {
-      if(quit)
+      if (quit)
         cout << "Exiting rshell." << endl << endl;
       break;
     }
 
-    char* args[3] = { const_cast<char*>(getCommand(i).getExecutable().getExecutable().c_str()), 
-                      const_cast<char*>(getCommand(i).getArguments().getArguments().c_str()), 
-		      NULL 
-		    }; // Will be executed with execvp; last element must be NULL
+    // Will be executed with execvp; last element must be NULL
+    char* args[3] = { 
+      const_cast<char*>(getCommand(i).getExecutable().getExecutable().c_str()),
+      const_cast<char*>(getCommand(i).getArguments().getArguments().c_str()), 
+      NULL 
+		    }; 
 
-    if(emptyArguments(getCommand(i))) // Fixes the "empty arguments list" bug (replace "" by NULL)
+    // Fixes the "empty arguments list" bug (replace "" by NULL))
+    if (emptyArguments(getCommand(i)))
       args[1] = NULL;
     
     pid_t c_pid, pid;
@@ -293,27 +336,29 @@ void ParsedCommand::execute(bool &quit)
 
     c_pid = fork();
 
-    if(c_pid < 0) // Fork problem
+    if (c_pid < 0) // Fork problem
     {
       perror("Error: fork failed");
       exit(1);
     }
-    else if(c_pid == 0) // Child process
+    else if (c_pid == 0) // Child process
     {
       execvp(args[0], args);
       perror("Error: execvp failed");
     }
-    else if(c_pid > 0) // Parent process
-      if((pid = wait(&status)) < 0)
+    else if (c_pid > 0) // Parent process
+      if ((pid = wait(&status)) < 0)
       {
         perror("Error occurred during wait");
 	exit(1);
       }
     
-    if(WIFEXITED(status)) // The child process ended normally
-      if(WEXITSTATUS(status) == 0) // The child process was executed normally
+    if (WIFEXITED(status)) // The child process ended normally
+      if (WEXITSTATUS(status) == 0) // The child process was executed normally
         success = true; 
     
-    runNext = getCommand(i).runNext(success); // Given the success/fail of this command, will the next one be ran considering its connector?
+    // Given the success/fail of this command:
+    // will the next one be run considering its connector?
+    runNext = getCommand(i).runNext(success); 
   }
 }
