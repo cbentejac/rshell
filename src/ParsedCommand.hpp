@@ -70,10 +70,6 @@ class ParsedCommand {
     void setCommandVector(std::vector<Command> v); // Sets the vector commands
 
     /**
-     * \brief Add spaces between the && or || connectors and the rest
-     */
-    void addSpaces();
-    /**
      * \brief Removes the comments from the user input
      */
     void stripComments();

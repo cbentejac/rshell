@@ -96,45 +96,6 @@ void ParsedCommand::setCommandVector(vector<Command> v)
 }
 
 
-// Add spaces between connectors (&& and || only )and the rest of the command line
-void ParsedCommand::addSpaces()
-{
-  string str = getLine();
-  string newStr;
-
-  char* str_conv = const_cast<char*>(str.c_str());
-  char* token = strtok(str_conv, " ");
-
-  while (token != NULL)
-  {
-    string tmp(token);
-    for (unsigned i = 0; i < tmp.size() - 1; i++)
-    {
-      if(tmp[i] == '&')
-      {
-        if(tmp[i + 1] == '&')
-	{
-	  newStr += " ";
-	}
-      }
-      else if (tmp[i] == '|')
-      {
-        if(tmp[i + 1] == '|')
-	{
-          newStr += " ";	
-	}
-      }
-      newStr += tmp[i];
-    }
-    newStr += tmp[tmp.size() - 1];
-
-    token = strtok(NULL, " ");
-  }
-
-  setLine(newStr);
-}
-
-
 // True if token ends with a semicolon
 static bool endWithSemicolon(char* token) 
 {
@@ -225,10 +186,9 @@ void ParsedCommand::stripComments()
 vector<string> ParsedCommand::separateCommands() 
 {
   vector<string> v;
-  addSpaces();
   trimLine();
   string str = getLine();
-  
+
   if (!getLine().empty()) // Checks that the command line is not empty; if true:
   // Directly return v to avoid trying to execute later an empty Command
   {
@@ -244,7 +204,7 @@ vector<string> ParsedCommand::separateCommands()
     }
   
     for (unsigned i = 0; i < str.size(); i++)
-    {
+    {   
       // If the ";" connector is found, extracts and adds the substring
       if (str[i] == ';')
       {
@@ -302,18 +262,24 @@ Command ParsedCommand::createCommand(string command)
   {
     if (cpt == 0) // First element of the command to parse = executable
     { 
+      ex = "" + string(token);
+      cpt ++;
+
       if (endWithSemicolon(token))
       { 
-        ex = "" + string(token);
 	ex = ex.substr(0, ex.size() - 1);
 	c = Semicolon();
-	cpt++;
       }
-      else
+      else if (endWithDoubleAnd(token))
       {
-	ex = "" + string(token);
-	cpt++;
-      } 
+	ex = ex.substr(0, ex.size() - 2);
+	c = DoubleAnd();
+      }
+      else if (endWithDoubleOr(token))
+      {
+	ex = ex.substr(0, ex.size() - 2);
+	c = DoubleOr();
+      }
     }
     else
     {
@@ -324,16 +290,29 @@ Command ParsedCommand::createCommand(string command)
       // (If there's no argument, this loop won't be reached)
       else 
       {
-        // Checks if it's the last element of the command
-	if (endWithSemicolon(token)) 
+        // Checks if it's the last element of the command (ends with connector)
+	if (endWithSemicolon(token) || endWithDoubleAnd(token) || endWithDoubleOr(token)) 
 	{ 
 	  // If it's not the 1st argument for this command, adds a space
 	  if (!(arg.empty())) 
 	    arg += " ";
 
           arg += "" + string(token);
-	  arg = arg.substr(0, arg.size() - 1);
-	  c = Semicolon();
+	  if (endWithSemicolon(token))
+	  {
+	    arg = arg.substr(0, arg.size() - 1); // Separate the argument from the connector
+	    c = Semicolon();
+	  }
+	  else if (endWithDoubleAnd(token))
+	  {
+	    arg = arg.substr(0, arg.size() - 2);
+	    c = DoubleAnd();
+	  }
+	  else
+	  {
+	    arg = arg.substr(0, arg.size() - 2);
+	    c = DoubleOr();
+	  }
         }
 	else
 	{
