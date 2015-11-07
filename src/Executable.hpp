@@ -15,7 +15,7 @@ class Executable
   public:
     /**
      * \brief Executable constructor.
-     * \param string exec the command line substring corresponding to the executable.
+     * \param string exec the substring corresponding to the executable.
      * \return An Executable object.
      */
     Executable(std::string exec);

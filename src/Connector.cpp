@@ -9,7 +9,8 @@
 
 using namespace std;
 
-Connector::Connector(string r, bool success) : representation(r), needSuccess(success)
+Connector::Connector(string r, bool success) : 
+  representation(r), needSuccess(success)
 {
 
 }

@@ -16,11 +16,11 @@ class Connector
     /**
      * \brief Connector constructor.
      * \param string r the representation of the connector.
-     * \param bool success the boolean that indicates whether the connector needs the success of the previous instruction to execute the next one.
-     * \param bool fail the boolean that indicates whether the connector need the fail of the previous instruction to run the next one.
+     * \param bool success the boolean that indicates whether the connector 
+     * needs the success of the previous instruction to execute the next one.
      * \return A new Connector object.
      */
-    Connector(std::string r, bool success/*, bool fail*/);
+    Connector(std::string r, bool success);
     /** 
      * \brief Connector destructor.
      */
@@ -37,12 +37,13 @@ class Connector
      */
     void setRepresentation(std::string r); 
     /**
-     * \brief Indicates if the connector needs the previous instruction to have succeeded to run the next one.
+     * \brief Indicates if the connector needs the previous instruction
+     * to have succeeded to run the next one.
      * \return A boolean: false if the success is not needed; true if it is.
      */
     bool getNeedSuccess();
     /**
-     * \brief Sets the "needs success of the previous instruction to run the next one" condition.
+     * \brief Sets the "needs success of the previous instruction" condition.
      * \param bool success: false if the success is not needed; true if it is.
      */
     void setNeedSuccess(bool success);
@@ -53,7 +54,7 @@ class Connector
      */
     std::string representation;
     /** 
-     * \brief "Needs success of the previous instruction to run the next one" condition.
+     * \brief "Needs success of the previous instruction" condition.
      */
     bool needSuccess;
 };

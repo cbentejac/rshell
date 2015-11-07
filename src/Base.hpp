@@ -2,7 +2,7 @@
  * \file Base.hpp
  * \author Candice Bentejac
  * \date November 6, 2015
- * \brief Base file containing the includes that are common to all the other files
+ * \brief Base file containing the includes common to all the other files.
  */
 
 #ifndef _BASE_HPP_

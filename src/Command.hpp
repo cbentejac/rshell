@@ -48,23 +48,25 @@ class Command
 
     /**
      * \brief Sets the Executable object composing the Command object.
-     * \param Executable e the new Executable object composing the Command object.
+     * \param Executable e the new Executable object composing the Command.
      */
     void setExecutable(Executable e);
     /**
      * \brief Sets the Arguments object composing the Command object.
-     * \param Arguments arg the new Arguments object to composing the Command object.
+     * \param Arguments arg the new Arguments object to composing the Command.
      */
     void setArguments(Arguments arg);
     /**
      * \brief Sets the Connector object composing the Command object.
-     * \param Connector c the new Connector object composing the Command object.
+     * \param Connector c the new Connector object composing the Command.
      */
     void setConnector(Connector c);
 
     /**
-     * \brief Determines whether the next instruction must be run or not, depending on the success and the connector of the previous ran command.
-     * \param bool success: true if the previous command was successfully ran; false if it was not.
+     * \brief Determines whether the next instruction must be run or not, 
+     * depending on the success and the connector of the previous run command.
+     * \param bool success: true if the previous command was successfully run; 
+     * false if it was not.
      * \return true if the next command can be run; false it cannot.
      */
     bool runNext(bool success);

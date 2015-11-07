@@ -108,8 +108,10 @@ static bool isConnector(char* str)
 
   string s(str);
   for (unsigned i = 0; i < v.size(); i++)
+  {
     if (s == v[i].getRepresentation())
       return true;
+  }
   return false;
 }
 
@@ -126,8 +128,10 @@ static Connector recognizeConnector(char* str)
 
   string s(str);
   for (unsigned i = 0; i < v.size(); i++)
+  {
     if (s == v[i].getRepresentation())
       return v[i];
+  }
 
   return Semicolon(); // Should never be reached, but just in case
 }
@@ -347,15 +351,19 @@ void ParsedCommand::execute(bool &quit)
       perror("Error: execvp failed");
     }
     else if (c_pid > 0) // Parent process
+    {
       if ((pid = wait(&status)) < 0)
       {
         perror("Error occurred during wait");
 	exit(1);
       }
+    }
     
     if (WIFEXITED(status)) // The child process ended normally
+    {
       if (WEXITSTATUS(status) == 0) // The child process was executed normally
         success = true; 
+    }
     
     // Given the success/fail of this command:
     // will the next one be run considering its connector?

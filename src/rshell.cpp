@@ -18,7 +18,7 @@ int main()
   cout << "Entering rshell." << endl << endl;
   bool quit = false;
 
-  while(!quit) // While quit == false, the user hasn't typed "exit"
+  while (!quit) // While quit == false, the user hasn't typed "exit"
   {
     userInfo(); 
     getline(cin, line);
@@ -30,19 +30,19 @@ int main()
 }
 
 
-static void userInfo() // Displays username, hostname, and the rshell prompt (€)
+static void userInfo() // Displays username, hostname, and rshell prompt (€)
 {
   char* username = getlogin();
-  if(username == NULL)
+  if (username == NULL)
   {
     perror("getlogin failed");
     exit(1);
   }
 
-  char hostname[30];
+  char hostname[30]; // 30 is an arbitrary size
   int r_host = gethostname(hostname, 30);
   
-  if(r_host == -1)
+  if (r_host == -1)
   {
     perror("gethostname failed");
     exit(1);

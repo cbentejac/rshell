@@ -9,6 +9,7 @@
 
 using namespace std;
 
+
 Arguments::Arguments(string arg) : arguments(arg)
 {
 

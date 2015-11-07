@@ -9,7 +9,8 @@
 
 using namespace std;
 
-Command::Command(string e, string arg, Connector c) : executable(Executable(e)), arguments(Arguments(arg)), connector(c)
+Command::Command(string e, string arg, Connector c) : 
+  executable(Executable(e)), arguments(Arguments(arg)), connector(c)
 {
 
 }
@@ -57,11 +58,14 @@ void Command::setConnector(Connector c)
 }
 
 
-bool Command::runNext(bool success) // Determines whether or not the next command must be ran
+// Determines whether or not the next command must be run
+bool Command::runNext(bool success) 
 {
-  if(getConnector().getNeedSuccess() == success) // If the connector attribute "needSuccess" matches the value of success, then it's OK
+  // If the connector "needSuccess" matches the value of success, then it's OK
+  if (getConnector().getNeedSuccess() == success)
     return true;
-  else if(getConnector().getRepresentation() == ";") // If the connector is a semicolon, the next command will be ran no matther what
+  // If the connector is a ";",  the next command will systematically be run
+  else if (getConnector().getRepresentation() == ";")
     return true;
   return false;
 }
