@@ -41,7 +41,6 @@ To run **rshell** from the root, type `$ bin/rshell`. Then type any command. **r
 ## Known bugs
 - If the connectors are not separated from the rest of the command line by spaces, then they're not recognized as connectors but as arguments, which often leads to an execution problem.
 
-- If the command line is empty, the program will still try to execute it, which leads to an `execvp` error message.
 
 - If the last command (meaning that there's nothing to execute after it) ends with a connector that is not a semicolon, the program tries to execute an empty command, which is a case similar to the "empty line" bug.
 
@@ -57,6 +56,8 @@ To run **rshell** from the root, type `$ bin/rshell`. Then type any command. **r
 - Commands that can normally be ran with or without arguments fail if the user tries to run them without arguments.
 
 - `exit` is always executed, no matter the value of the connector. Ex: `ls -a || exit` will still exit, even though `ls -a` was successfully executed.
+
+- If the command line is empty, the program will still try to execute it, which leads to an `execvp` error message.
 
 # Bugs à résoudre
 
