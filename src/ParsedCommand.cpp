@@ -345,15 +345,6 @@ void ParsedCommand::parse()
 }
 
 
-// Checks if a command has an empty line of arguments; used to avoid later bugs
-static bool emptyArguments(Command cmd)
-{
-  if (cmd.getArguments().getArguments() == "")
-    return true;
-  return false;
-}
-
-
 void ParsedCommand::execute(bool &quit)
 {
   parse();
@@ -381,17 +372,33 @@ void ParsedCommand::execute(bool &quit)
       break;
     }
 
-    // Will be executed with execvp; last element must be NULL
-    char* args[3] = { 
-      const_cast<char*>(getCommand(i).getExecutable().getExecutable().c_str()),
-      const_cast<char*>(getCommand(i).getArguments().getArguments().c_str()), 
-      NULL 
-		    }; 
-
-    // Fixes the "empty arguments list" bug (replace "" by NULL))
-    if (emptyArguments(getCommand(i)))
-      args[1] = NULL;
+    // Designed to handle the case where there are several arguments 
+    char* str = const_cast<char*>(
+                getCommand(i).getArguments().getArguments().c_str()
+		); // Takes the arguments list
+    char* token = strtok(str, " "); // Tokenizes to determine the # of args
+    vector<string> v;
     
+    // The arguments are put in a vector whose size 
+    while (token != NULL)
+    {
+      v.push_back(string(token));
+      token = strtok(NULL, " ");
+    }
+    
+    int size = v.size() + 2; // Size of args (exec + args # + null = args # + 2)
+    char** args = new char*[size];
+    
+    for (int j = 0; j < size; j++)
+    {
+      if (j == 0) // Executable
+        args[j] = const_cast<char*>(getCommand(i).getExecutable().getExecutable().c_str());
+      else if (j == size - 1) // NULL
+        args[j] = NULL;
+      else // Arguments
+        args[j] = const_cast<char*>(v[j - 1].c_str());
+    }
+
     pid_t c_pid, pid;
     int status;
 
@@ -424,6 +431,9 @@ void ParsedCommand::execute(bool &quit)
     
     // Given the success/fail of this command:
     // will the next one be run considering its connector?
-    runNext = getCommand(i).runNext(success); 
+    runNext = getCommand(i).runNext(success);
+   
+   delete args; // Delete the array
   }
 }
+
