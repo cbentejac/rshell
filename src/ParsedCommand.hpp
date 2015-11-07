@@ -35,7 +35,11 @@ class ParsedCommand {
      * \param string line the new command line.
      */
     void setLine(std::string line);
-    
+
+    /** 
+     * \brief Removes the white spaces at the end of the command line.
+     */
+    void trimLine();
     /**
      * \brief Returns the object Command at the index i in the vector commands.
      * \param unsigned i the index of the Command in the vector commands.

@@ -37,6 +37,14 @@ void ParsedCommand::setLine(string line)
 }
 
 
+// Removes the space at the end of a string
+void ParsedCommand::trimLine()
+{
+  while (isspace(getLine()[getLine().size() - 1]))
+    setLine(getLine().substr(0, getLine().size() - 1));
+}
+
+
 Command ParsedCommand::getCommand(unsigned i) // Returns the Command contained 
 {
   assert(i < commands.size()); // Checks that i isn't out of range
@@ -98,6 +106,30 @@ static bool endWithSemicolon(char* token)
 }
 
 
+// True if token ends with "&&"
+static bool endWithDoubleAnd(char* token)
+{
+  string s(token);
+  if (s.size() < 2)
+    return false;
+  if (s[s.size() - 1] == '&' && s[s.size() - 2] == '&')
+    return true;
+  return false;
+}
+
+
+// True if token ends with "||"
+static bool endWithDoubleOr(char* token)
+{
+  string s(token);
+  if (s.size() < 2)
+    return false;
+  if (s[s.size() - 1] == '|' && s[s.size() - 2] == '|')
+    return true;
+  return false;
+}
+
+
 // Returns true if str is a connector representation 
 static bool isConnector(char* str) 
 {
@@ -137,6 +169,8 @@ static Connector recognizeConnector(char* str)
 }
 
 
+
+
 // Removes comments from the command line typed by the user 
 void ParsedCommand::stripComments() 
 {
@@ -154,16 +188,22 @@ void ParsedCommand::stripComments()
 vector<string> ParsedCommand::separateCommands() 
 {
   vector<string> v;
+  trimLine();
   string str = getLine();
   
   if (!getLine().empty()) // Checks that the command line is not empty; if true:
   // Directly return v to avoid trying to execute later an empty Command
   {
     unsigned j = 0; // Position of the last separation made in the command line
-
+    
     // If the user input doesn't end with a semicolon, adds one 
+    // Or, if there was another connector, replace it
     if (!endWithSemicolon(const_cast<char*>(str.c_str())))
+    {
+      if(endWithDoubleAnd(const_cast<char*>(str.c_str())) || endWithDoubleOr(const_cast<char*>(str.c_str())))
+        str = str.substr(0, str.size() - 2);
       str += ";";
+    }
   
     for (unsigned i = 0; i < str.size(); i++)
     {
@@ -305,7 +345,7 @@ void ParsedCommand::execute(bool &quit)
   bool runNext = true; 
 
   for (unsigned i = 0;  i < getCommandVector().size(); i++)
-  { 
+  {
     // Has the command been run normally? By default, false
     bool success = false; 
     

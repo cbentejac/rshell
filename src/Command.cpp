@@ -54,7 +54,7 @@ void Command::setArguments(Arguments arg)
 
 void Command::setConnector(Connector c)
 {
-  connector = Connector(c);
+  connector = c;
 }
 
 
