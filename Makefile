@@ -8,7 +8,7 @@ all:
 	$(MAKE) rshell
 
 rshell:
-	mkdir bin; \
+	mkdir -p bin; \
 	$(CC) $(CFLAGS) $(SOURCES) -o $(EXECUTABLE); \
 	mv $(EXECUTABLE) ./bin
 
