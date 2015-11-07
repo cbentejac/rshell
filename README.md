@@ -2,27 +2,28 @@
 Written by Candice Bentéjac for the University of California - Riverside CS100 class (Fall 2015).
 
 ## Description of rshell
-The program consists in a shell called *rshell* and written in C++. This shell must be able to perform the following steps:
+The program consists in a shell called **rshell** and written in C++. This shell must be able to perform the following steps:
+
 1. Print a command prompt (like $).
 
 2. Read in a command (which has the form `cmd = executable [ argumentList ] [ connector cmd ]`) on one line.
 
-"&&", "||" and ";" are the three connectors that can be used to link commands between each other on the same command line. They work as following:
-- *;*: The next command is always executed.
-- *&&*: The next command is executed only if the current one succeeds.
-- *||*: The next command is executed only if the current one fails.
+`&&`, `||` and `;` are the three connectors that can be used to link commands between each other on the same command line. They work as following:
+- **;**: The next command is always executed.
+- **&&**: The next command is executed only if the current one succeeds.
+- **||**: The next command is executed only if the current one fails.
 
 ## Features
-- In order to distinguish the normal shell from the *rshell*, `€` will be used instead of `$` as a command prompt. 
-- *rshell* displays the username and the host name using the form `[username@hostname]`.
+- In order to distinguish the normal shell from the **rshell**, `€` will be used instead of `$` as a command prompt. 
+- **rshell** displays the username and the host name using the form `[username@hostname]`.
 - # can be used to comment a part of command. Everything located after # will be ignored.
-- To exit *rshell*, type `exit`.
+- To exit **rshell**, type `exit`.
 - An error message is displayed whenever a command fails.
 
 
 ## Installing and running rshell
 ### Installing
-The following lines will allow you to download *rshell* and compile it from the root.
+The following lines will allow you to download **rshell** and compile it from the root.
 ```
 $ git clone https://github.com/xArchange/rshell.git
 $ cd rshell
@@ -31,7 +32,7 @@ $ make
 ```
 
 ### Running
-To run *rshell* from the root, type `$ bin/rshell`. Then type any command. *rshell* can support both single commands and comands using connectors. As an example, you can enter the following command lines:
+To run **rshell** from the root, type `$ bin/rshell`. Then type any command. **rshell** can support both single commands and comands using connectors. As an example, you can enter the following command lines:
 ```
 € ls -lR
 € ls -a; echo hello && mkdir test || echo world; git status
@@ -46,9 +47,9 @@ To run *rshell* from the root, type `$ bin/rshell`. Then type any command. *rshe
 
 - The `cd` isn't recognized and thus systematically fails.
 
-- If the command is an `echo` and the user has surrounded the message to display with simple or double quotes, *rshell* will also display these quotes, unlike *bash*.
+- If the command is an `echo` and the user has surrounded the message to display with simple or double quotes, **rshell** will also display these quotes, unlike **bash**.
 
-- If a command is spelled incorrectly or doesn't exist and thus leads to a fail of `execvp`, it is impossible to directly exit *rshell* using the `exit`command. As an example, if three commands lead to a fail of `execvp`, it will be necessary to run `exit` three times before it becomes effective. _It's like `exit` had to go through a stack of failed commands to be effective._
+- If a command is spelled incorrectly or doesn't exist and thus leads to a fail of `execvp`, it is impossible to directly exit **rshell** using the `exit`command. As an example, if three commands lead to a fail of `execvp`, it will be necessary to run `exit` three times before it becomes effective. _It's like `exit` had to go through a stack of failed commands to be effective._
 
 - In the command `€ ls -lR /`, the `/` character is considered as an unvalid option and the command consequently fails.
 
@@ -63,11 +64,6 @@ To run *rshell* from the root, type `$ bin/rshell`. Then type any command. *rshe
 
 	=> DEVRAIT SE FAIRE AU MOMENT DE SEPARATE() !!! Dans Parse.cpp (en local), toutes les fonctions (ou presque) permettant de traiter ces cas ont été écrites, il suffit donc de les copier/coller et de les réutiliser. Si le temps, écrire une fonction qui regroupe toutes ces fonctions ou qui d'office vérifie tous ces cas sans faire appel à trop de fonctions annexes (dans l'idéal).
 
-# A faire (si le temps)
-- Gérer le cas du cd.
-- Vérifier nommages des variables et des méthodes (conventions (se baser sur celle de Java, puisque seule référence en POO), CalTech et "transparence").
-- Raccourcir le code de certaines fonctions (mais probablement pas faisable dans les délais) ; certaines fonctions sont très longues en raison des {} pas toujours nécessaires (notamment dans les if/else) et surtout pas harmonisés (shame on me!).
-- Aérer le code et commenter les CPP de façon pertinente.
 
 # A finir 
 - Tests
