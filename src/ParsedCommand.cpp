@@ -151,7 +151,7 @@ static bool isConnector(char* str)
 // Returns the connector corresponding to a string representation
 static Connector recognizeConnector(char* str)
 {
-  assert(isConnector(str)); // Checks that str is a connector
+  assert(isConnector(str)); // Checks that str is a connector 
 
   vector<Connector> v;
   v.push_back(Semicolon());
