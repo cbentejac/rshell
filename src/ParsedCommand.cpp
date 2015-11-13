@@ -433,7 +433,7 @@ void ParsedCommand::execute(bool &quit)
     // will the next one be run considering its connector?
     runNext = getCommand(i).runNext(success);
    
-   delete args; // Delete the array
+   delete[] args; // Delete the array
   }
 }
 
