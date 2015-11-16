@@ -349,7 +349,7 @@ void ParsedCommand::execute(bool &quit)
 {
   parse();
 
-  // Will the next instruction be run? By default, false
+  // Will the next instruction be run? By default, true
   bool runNext = true; 
 
   for (unsigned i = 0;  i < getCommandVector().size(); i++)
@@ -357,83 +357,94 @@ void ParsedCommand::execute(bool &quit)
     // Has the command been run normally? By default, false
     bool success = false; 
     
-    // If exist is the executable and the next instruction is to be run
+    // If exit is the executable and the next instruction is to be run
     if (getCommand(i).getExecutable().getExecutable() == "exit" && 
         runNext == true) 
     // quit value becomes true
       quit = true;
 
-    // If exit has been found or if the connector "refuses" the next command:
-    if (quit == true || runNext == false) 
+    // If exit has been found
+    if (quit == true) 
     // Stop trying executing the rest of the command line
     {
-      if (quit)
-        cout << "Exiting rshell." << endl << endl;
+      cout << "Exiting rshell." << endl << endl;
       break;
     }
 
-    // Designed to handle the case where there are several arguments 
-    char* str = const_cast<char*>(
-                getCommand(i).getArguments().getArguments().c_str()
-		); // Takes the arguments list
-    char* token = strtok(str, " "); // Tokenizes to determine the # of args
-    vector<string> v;
+    // If the next command should be run
+    if (runNext == true) 
+    {
+      // Designed to handle the case where there are several arguments 
+      char* str = const_cast<char*>(
+                  getCommand(i).getArguments().getArguments().c_str()
+  		  ); // Takes the arguments list
+      char* token = strtok(str, " "); // Tokenizes to determine the # of args
+      vector<string> v;
     
-    // The arguments are put in a vector whose size 
-    while (token != NULL)
-    {
-      v.push_back(string(token));
-      token = strtok(NULL, " ");
-    }
-    
-    int size = v.size() + 2; // Size of args (exec + args # + null = args # + 2)
-    char** args = new char*[size];
-    
-    for (int j = 0; j < size; j++)
-    {
-      if (j == 0) // Executable
-        args[j] = const_cast<char*>(getCommand(i).getExecutable().getExecutable().c_str());
-      else if (j == size - 1) // NULL
-        args[j] = NULL;
-      else // Arguments
-        args[j] = const_cast<char*>(v[j - 1].c_str());
-    }
-
-    pid_t c_pid, pid;
-    int status;
-
-    c_pid = fork();
-
-    if (c_pid < 0) // Fork problem
-    {
-      perror("Error: fork failed");
-      exit(1);
-    }
-    else if (c_pid == 0) // Child process
-    {
-      execvp(args[0], args);
-      perror("Error: execvp failed");
-    }
-    else if (c_pid > 0) // Parent process
-    {
-      if ((pid = wait(&status)) < 0)
+      // The arguments are put in a vector whose size 
+      while (token != NULL)
       {
-        perror("Error occurred during wait");
-	exit(1);
+        v.push_back(string(token));
+        token = strtok(NULL, " ");
+      } 
+    
+      int size = v.size() + 2; // Size of args (exec + args # + null = args # + 2)
+      char** args = new char*[size];
+    
+      for (int j = 0; j < size; j++)
+      {
+        if (j == 0) // Executable
+          args[j] = const_cast<char*>(getCommand(i).getExecutable().getExecutable().c_str());
+        else if (j == size - 1) // NULL
+          args[j] = NULL;
+        else // Arguments
+          args[j] = const_cast<char*>(v[j - 1].c_str());
       }
-    }
+
+      pid_t c_pid, pid;
+      int status;
+
+      c_pid = fork();
+
+      if (c_pid < 0) // Fork problem
+      {
+        perror("Error: fork failed");
+        exit(1);
+      }
+      else if (c_pid == 0) // Child process
+      {
+        execvp(args[0], args);
+        perror("Error: execvp failed");
+      } 
+      else if (c_pid > 0) // Parent process
+      {
+        if ((pid = wait(&status)) < 0)
+        {
+          perror("Error occurred during wait");
+	  exit(1);
+        }
+      }  
     
-    if (WIFEXITED(status)) // The child process ended normally
+      if (WIFEXITED(status)) // The child process ended normally
+      {
+        if (WEXITSTATUS(status) == 0) // The child process was executed normally
+          success = true; 
+      }  
+    
+      // Given the success/fail of this command:
+      // will the next one be run considering its connector?
+      runNext = getCommand(i).runNext(success);
+      
+      delete[] args; // Delete the array
+    }
+    else // If the current command shouldn't be run, see if we run the next one or not
     {
-      if (WEXITSTATUS(status) == 0) // The child process was executed normally
-        success = true; 
+      if (getCommand(i).getConnector().getRepresentation() == "||")
+        runNext = false;
+      else
+        runNext = true;
     }
-    
-    // Given the success/fail of this command:
-    // will the next one be run considering its connector?
-    runNext = getCommand(i).runNext(success);
    
-   delete[] args; // Delete the array
   }
 }
 

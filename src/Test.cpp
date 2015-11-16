@@ -9,7 +9,7 @@
 
 using namespace std;
 
-Test::Test() : Command("test", "-e", Semicolon())
+Test::Test(Connector c) : Command("test", "-e", c)
 {
 
 }
