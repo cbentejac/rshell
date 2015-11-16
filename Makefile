@@ -1,7 +1,7 @@
 # Variables
 CC = g++
 CFLAGS = -Wall -Werror -ansi -pedantic
-SOURCES = src/rshell.cpp src/Connector.cpp src/Semicolon.cpp src/DoubleAnd.cpp src/DoubleOr.cpp src/Arguments.cpp src/Executable.cpp src/Command.cpp src/ParsedCommand.cpp
+SOURCES = src/rshell.cpp src/Connector.cpp src/Semicolon.cpp src/DoubleAnd.cpp src/DoubleOr.cpp src/Arguments.cpp src/Executable.cpp src/Command.cpp src/Test.cpp src/ParsedCommand.cpp
 EXECUTABLE = rshell
 
 all: 
