@@ -70,4 +70,5 @@ Université de Bordeaux / University of California, Riverside
 
 #### Homework 2
 Samuel Magness (smagn001) & Candice Bentéjac (cbent002)
+
 University of California, Riverside & Université de Bordeaux / University of California, Riverside
