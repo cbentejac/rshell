@@ -253,6 +253,7 @@ Command ParsedCommand::createCommand(string command)
   
   char* str_conv(const_cast<char*>(copy.c_str()));
   char* token(strtok(str_conv, " ")); // Launches tokenization
+
   unsigned cpt = 0; // To distinguish the executable from arguments in the loop
   // cpt == 0: 1st time in the loop and the string is necessarily an executable
 

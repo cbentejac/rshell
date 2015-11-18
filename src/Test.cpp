@@ -60,8 +60,6 @@ Test Test::parseTest(string cmd)
 
   while (token != NULL)
   { 
-    cout << "TOKEN: " << token << endl;
-
     // "test", [, ] have been treated to be separated from arg and connector
     // They're necessarily token on their own that we can ignore
     if (string(token).compare("[") != 0 &&

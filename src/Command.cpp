@@ -139,7 +139,5 @@ bool Command::testSuccess()
       }
     }
   }*/
-
-  cout << getExecutable().getExecutable() << getArguments().getArguments() << getConnector().getRepresentation() << endl;
   return success;
 }
