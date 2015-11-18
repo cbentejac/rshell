@@ -13,6 +13,10 @@
 #include "DoubleOr.hpp"
 #include "Arguments.hpp"
 #include "Executable.hpp"
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <vector>
+
 
 class Command 
 {
@@ -63,6 +67,10 @@ class Command
     void setConnector(Connector c);
 
     /**
+     * \brief Prints the command on the standard output stream.
+     */
+    void readCommand();
+    /**
      * \brief Determines whether the next instruction must be run or not, 
      * depending on the success and the connector of the previous run command.
      * \param bool success: true if the previous command was successfully run; 
@@ -70,6 +78,16 @@ class Command
      * \return true if the next command can be run; false it cannot.
      */
     bool runNext(bool success);
+    /**
+     * \brief Determines whether or not the command is a test command.
+     * \return True if it's a test command; false if it's not.
+     */
+    bool isTest();
+    /**
+     * \brief Simulates the execution of the test command.
+     * \return A boolean that states the success or the failure of the test.
+     */
+    bool testSuccess();
   
   protected:
     /**

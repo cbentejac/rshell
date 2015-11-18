@@ -27,6 +27,11 @@ class Test : public Command
      */
     Test(std::string arg, Connector c);
     /**
+     * \brief Parse a test command line.
+     * \return A Test object.
+     */
+    static Test parseTest(std::string cmd);
+    /**
      * \brief Test destructor.
      */
     ~Test();

@@ -97,7 +97,7 @@ void ParsedCommand::setCommandVector(vector<Command> v)
 
 
 // True if token ends with a semicolon
-static bool endWithSemicolon(char* token) 
+bool ParsedCommand::endWithSemicolon(char* token) 
 {
   string s(token);
   if (s[s.size() - 1] == ';')
@@ -107,7 +107,7 @@ static bool endWithSemicolon(char* token)
 
 
 // True if token ends with "&&"
-static bool endWithDoubleAnd(char* token)
+bool ParsedCommand::endWithDoubleAnd(char* token)
 {
   string s(token);
   if (s.size() < 2)
@@ -119,7 +119,7 @@ static bool endWithDoubleAnd(char* token)
 
 
 // True if token ends with "||"
-static bool endWithDoubleOr(char* token)
+bool ParsedCommand::endWithDoubleOr(char* token)
 {
   string s(token);
   if (s.size() < 2)
@@ -131,7 +131,7 @@ static bool endWithDoubleOr(char* token)
 
 
 // Returns true if str is a connector representation 
-static bool isConnector(char* str) 
+bool ParsedCommand::isConnector(char* str) 
 {
   vector<Connector> v;
   v.push_back(Semicolon());
@@ -149,7 +149,7 @@ static bool isConnector(char* str)
 
 
 // Returns the connector corresponding to a string representation
-static Connector recognizeConnector(char* str)
+Connector ParsedCommand::recognizeConnector(char* str)
 {
   assert(isConnector(str)); // Checks that str is a connector 
 
@@ -198,9 +198,10 @@ vector<string> ParsedCommand::separateCommands()
     // Or, if there was another connector, replace it
     if (!endWithSemicolon(const_cast<char*>(str.c_str())))
     {
-      if(endWithDoubleAnd(const_cast<char*>(str.c_str())) || endWithDoubleOr(const_cast<char*>(str.c_str())))
+      if(endWithDoubleAnd(const_cast<char*>(str.c_str())) || 
+         endWithDoubleOr(const_cast<char*>(str.c_str())))
         str = str.substr(0, str.size() - 2);
-      str += ";";
+      str += " ;";
     }
   
     for (unsigned i = 0; i < str.size(); i++)
@@ -247,9 +248,11 @@ vector<string> ParsedCommand::separateCommands()
 
 Command ParsedCommand::createCommand(string command)
 {
-  char* str_conv(const_cast<char*>(command.c_str()));
+  string copy = "" + command; // Copy of command that will be tokenized
+  // We need to keep command untouched for the test parsing
+  
+  char* str_conv(const_cast<char*>(copy.c_str()));
   char* token(strtok(str_conv, " ")); // Launches tokenization
-
   unsigned cpt = 0; // To distinguish the executable from arguments in the loop
   // cpt == 0: 1st time in the loop and the string is necessarily an executable
 
@@ -280,6 +283,14 @@ Command ParsedCommand::createCommand(string command)
 	ex = ex.substr(0, ex.size() - 2);
 	c = DoubleOr();
       }
+
+      // If it's a test command
+      else if (strcmp(token, "[") == 0 || 
+               token[0] == '[' || 
+	       ex == "test")
+      {
+        return Test::parseTest(command);
+      }
     }
     else
     {
@@ -290,18 +301,23 @@ Command ParsedCommand::createCommand(string command)
       // (If there's no argument, this loop won't be reached)
       else 
       {
-        // Checks if it's the last element of the command (ends with connector)
-	if (endWithSemicolon(token) || endWithDoubleAnd(token) || endWithDoubleOr(token)) 
-	{ 
-	  // If it's not the 1st argument for this command, adds a space
-	  if (!(arg.empty())) 
-	    arg += " ";
 
-          arg += "" + string(token);
+	// If it's not the 1st argument for this command, adds a space
+	if (!(arg.empty())) 
+	  arg += " ";
+
+        arg += "" + string(token);
+
+        // Checks if it's the last element of the command (ends with connector)
+	if (endWithSemicolon(token) || 
+	    endWithDoubleAnd(token) || 
+	    endWithDoubleOr(token)) 
+	{ 
 	  if (endWithSemicolon(token))
 	  {
-	    arg = arg.substr(0, arg.size() - 1); // Separate the argument from the connector
-	    c = Semicolon();
+	    // Separate the argument from the connector
+	    arg = arg.substr(0, arg.size() - 1); 
+            c = Semicolon();
 	  }
 	  else if (endWithDoubleAnd(token))
 	  {
@@ -314,20 +330,12 @@ Command ParsedCommand::createCommand(string command)
 	    c = DoubleOr();
 	  }
         }
-	else
-	{
-	  if (!(arg.empty()))
-	    arg += " ";
-
-          arg += "" + string(token);
-        }
       }
     }
     token = strtok(NULL, " "); 
   }
   
-  Command cmd(ex, arg, c); // Create the Command object with the string
-  return cmd; // The parsed command is added to the vector
+  return Command(ex, arg, c); // Create the Command object with the string
 }
 
 
@@ -371,9 +379,16 @@ void ParsedCommand::execute(bool &quit)
       break;
     }
 
-    // If the next command should be run
-    if (runNext == true) 
+    // If the command is a test command
+    if (getCommand(i).isTest())
+      runNext = getCommand(i).runNext(getCommand(i).testSuccess());
+    
+
+    // If the next command should be run and is not a test
+    if (runNext == true && !getCommand(i).isTest()) 
     {
+      cout << "ENTER EXECVP" << endl;
+
       // Designed to handle the case where there are several arguments 
       char* str = const_cast<char*>(
                   getCommand(i).getArguments().getArguments().c_str()
@@ -437,14 +452,15 @@ void ParsedCommand::execute(bool &quit)
       
       delete[] args; // Delete the array
     }
-    else // If the current command shouldn't be run, see if we run the next one or not
+
+    else // If the current command isn't run, see if we run the next one or not
     {
+      // If the connector is ||, then we mustn't run the next command
       if (getCommand(i).getConnector().getRepresentation() == "||")
         runNext = false;
-      else
+      else // If it's && or ;, then we should run it
         runNext = true;
     }
-   
   }
 }
 

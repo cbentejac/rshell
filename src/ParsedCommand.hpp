@@ -9,6 +9,7 @@
 #define _PARSED_COMMAND_HPP_
 
 #include "Command.hpp"
+#include "Test.hpp"
 #include <vector>
 
 class ParsedCommand {
@@ -70,9 +71,40 @@ class ParsedCommand {
     void setCommandVector(std::vector<Command> v); // Sets the vector commands
 
     /**
+     * \brief Determines whether or not the char* ends with a semicolon.
+     * \param char* str a character array.
+     * \return True if str ends with a semicolon; false if it doesn't.
+     */
+    static bool endWithSemicolon(char* str);
+    /**
+     * \brief Determines whether or not the char* ends with "&&".
+     * \param char* str a character array.
+     * \return True if str ends with "&&"; false if it doesn't.
+     */
+    static bool endWithDoubleAnd(char* str);
+    /**
+     * \brief Determines whether or not the char* ends with "||".
+     * \param char* str a character array.
+     * \return True if str ends with "||"; false if it doesn't.
+     */
+    static bool endWithDoubleOr(char* str);
+    /**
+     * \brief Determines whether or not the char* is a connector.
+     * \param char* str a character array.
+     * \return True if str is a connector; false if it isn't.
+     */
+    static bool isConnector(char *str);
+    /**
+     * \brief Returns the connector corresponding to a char*.
+     * \param char* str a character array.
+     * \return A Connector corresponding to str.
+     */
+    static Connector recognizeConnector(char* str);
+
+    /**
      * \brief Removes the comments from the user input
      */
-    void stripComments();
+    void stripComments();    
     /**
      * \brief Separate the user input into different command strings.
      * \return A string vector where a string corresponds to a single command.
