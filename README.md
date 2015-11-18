@@ -19,7 +19,7 @@ The program consists in a shell called **rshell** and written in C++. This shell
 - # can be used to comment a part of command. Everything located after # will be ignored.
 - To exit **rshell**, type `exit`.
 - An error message is displayed whenever a command fails.
-- The `test`command can be used either with the brackets `[]` or the `test` instruction and is working perfectly fine with the connectors. (However, no code has been written to handle it: the **rshell** from hw1 can handle it itself, even though `execvp` has been used) If no flag is typed by the user, **rshell** seems to add the `-e` flag by default. Nevertheless, the Test class will be implemented in order to make sure that the `-e` flag is the one used by default.
+- (The `test`command can be used either with the brackets `[]` or the `test` instruction and is working perfectly fine with the connectors.) ==> Need to finish testSuccess to be able to run following commands.
 
 
 ## Installing and running rshell
