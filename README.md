@@ -62,7 +62,12 @@ To run **rshell** from the root, type `$ bin/rshell`. Then type any command. **r
 
 - In the command `€ ls -lR /`, the `/` character is considered as an unvalid option and the command consequently fails. _The problem was actually linked to the number of arguments._
 
-## Author
+## Authors
+#### Homework 1
 Candice Bentéjac (cbent002)
 
 Université de Bordeaux / University of California, Riverside
+
+#### Homework 2
+Samuel Magness (smagn001) & Candice Bentéjac (cbent002)
+University of California, Riverside & Université de Bordeaux / University of California, Riverside
