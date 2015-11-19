@@ -17,7 +17,7 @@ class Semicolon : public Connector
      * \brief Semicolon constructor.
      * \return A Semicolon object.
      */
-    Semicolon();
+    Semicolon(int p);
     /**
      * \brief Semicolon destructor.
      */

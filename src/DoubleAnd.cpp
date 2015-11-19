@@ -9,7 +9,7 @@
 
 using namespace std;
 
-DoubleAnd::DoubleAnd() : Connector("&&", true)
+DoubleAnd::DoubleAnd(int p) : Connector("&&", true, p)
 {
 
 }

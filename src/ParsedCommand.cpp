@@ -58,17 +58,17 @@ void ParsedCommand::setCommand(unsigned i, Command c)
   if (c.getConnector().getRepresentation() == ";")
     commands[i] = Command(c.getExecutable().getExecutable(), 
                           c.getArguments().getArguments(), 
-			  Semicolon()
+			  Semicolon(0)
 			 );
   if (c.getConnector().getRepresentation() == "&&")
     commands[i] = Command(c.getExecutable().getExecutable(), 
                           c.getArguments().getArguments(), 
-			  DoubleAnd()
+			  DoubleAnd(0)
 			 );
   if (c.getConnector().getRepresentation() == "||")
     commands[i] = Command(c.getExecutable().getExecutable(), 
                           c.getArguments().getArguments(), 
-			  DoubleOr()
+			  DoubleOr(0)
 			 );    
 }
 
@@ -134,9 +134,9 @@ bool ParsedCommand::endWithDoubleOr(char* token)
 bool ParsedCommand::isConnector(char* str) 
 {
   vector<Connector> v;
-  v.push_back(Semicolon());
-  v.push_back(DoubleAnd());
-  v.push_back(DoubleOr());
+  v.push_back(Semicolon(0));
+  v.push_back(DoubleAnd(0));
+  v.push_back(DoubleOr(0));
 
   string s(str);
   for (unsigned i = 0; i < v.size(); i++)
@@ -148,15 +148,52 @@ bool ParsedCommand::isConnector(char* str)
 }
 
 
+// Returns true if str begins a parenthetical statement.
+bool ParsedCommand::beginsParenthetical(std::string str)
+{
+  if (str.at(0) == '(')
+    return true;
+  else
+    return false;
+}
+
+
+// Returns true if str ends a parenthetical statement.
+bool ParsedCommand::endsParenthetical(std::string str)
+{
+  unsigned int s = str.size();
+  if (str.at(s-1) == ';')
+  {
+    if (str.at(s-2) == ')')
+      return true;
+    else 
+      return false;
+  }
+  if ((str.at(s-1) == '&') && (str.at(s-2) == '&'))
+  {
+    if(str.at(s-3) == ')')
+      return true;
+    else
+      return false;
+  }
+  if ((str.at(s-1) == '|') && (str.at(s-2) == '|'))
+  {
+    if (str.at(s-3) == ')')
+      return true;
+    else
+      return false;
+  }
+  return false;
+}
 // Returns the connector corresponding to a string representation
-Connector ParsedCommand::recognizeConnector(char* str)
+Connector ParsedCommand::recognizeConnector(char* str, int p)
 {
   assert(isConnector(str)); // Checks that str is a connector 
 
   vector<Connector> v;
-  v.push_back(Semicolon());
-  v.push_back(DoubleAnd());
-  v.push_back(DoubleOr());
+  v.push_back(Semicolon(p));
+  v.push_back(DoubleAnd(p));
+  v.push_back(DoubleOr(p));
 
   string s(str);
   for (unsigned i = 0; i < v.size(); i++)
@@ -165,7 +202,7 @@ Connector ParsedCommand::recognizeConnector(char* str)
       return v[i];
   }
 
-  return Semicolon(); // Should never be reached, but just in case
+  return Semicolon(0); // Should never be reached, but just in case
 }
 
 
@@ -246,8 +283,20 @@ vector<string> ParsedCommand::separateCommands()
 }
 
 
-Command ParsedCommand::createCommand(string command)
-{
+Command ParsedCommand::createCommand(string command, int precedence)
+{ 
+  //Remove the parentheses, we no longer need them.
+  if (beginsParenthetical(command))
+    command.erase(command.begin());
+  if (endsParenthetical(command))
+  {
+    unsigned int s = command.size();
+    if (command.at(s-1) == ';')
+      command.erase(command.end()-2);
+    else
+      command.erase(command.end()-3);
+  }
+    
   string copy = "" + command; // Copy of command that will be tokenized
   // We need to keep command untouched for the test parsing
   
@@ -260,7 +309,7 @@ Command ParsedCommand::createCommand(string command)
   // Initialization of the command elements;
   string ex;
   string arg;
-  Connector c = Semicolon();
+  Connector c = Semicolon(precedence);
 
   while (token != NULL)
   {
@@ -272,17 +321,17 @@ Command ParsedCommand::createCommand(string command)
       if (endWithSemicolon(token))
       { 
 	ex = ex.substr(0, ex.size() - 1);
-	c = Semicolon();
+	c = Semicolon(precedence);
       }
       else if (endWithDoubleAnd(token))
       {
 	ex = ex.substr(0, ex.size() - 2);
-	c = DoubleAnd();
+	c = DoubleAnd(precedence);
       }
       else if (endWithDoubleOr(token))
       {
 	ex = ex.substr(0, ex.size() - 2);
-	c = DoubleOr();
+	c = DoubleOr(precedence);
       }
 
       // If it's a test command
@@ -290,13 +339,13 @@ Command ParsedCommand::createCommand(string command)
                token[0] == '[' || 
 	       ex == "test")
       {
-        return Test::parseTest(command);
+        return Test::parseTest(command, precedence);
       }
     }
     else
     {
       if (isConnector(token)) // If it's a connector, recognize it
-        c = recognizeConnector(token);
+        c = recognizeConnector(token, precedence);
       
       // If it's not an executable and not a connector, then it's an argument
       // (If there's no argument, this loop won't be reached)
@@ -318,17 +367,17 @@ Command ParsedCommand::createCommand(string command)
 	  {
 	    // Separate the argument from the connector
 	    arg = arg.substr(0, arg.size() - 1); 
-            c = Semicolon();
+            c = Semicolon(precedence);
 	  }
 	  else if (endWithDoubleAnd(token))
 	  {
 	    arg = arg.substr(0, arg.size() - 2);
-	    c = DoubleAnd();
+	    c = DoubleAnd(precedence);
 	  }
 	  else
 	  {
 	    arg = arg.substr(0, arg.size() - 2);
-	    c = DoubleOr();
+	    c = DoubleOr(precedence);
 	  }
         }
       }
@@ -345,12 +394,26 @@ void ParsedCommand::parse()
   stripComments(); // Eliminates the comments from the command line
   // Separates the different commands so that we can parse them one by one
   vector<string> v = separateCommands(); 
+  //Keeps track of how many parentheses each command is within
+  int p = 0; 
 
   for (unsigned i = 0; i < v.size(); i++)
   {
-    Command c = createCommand(v[i]);
+    if (beginsParenthetical(v[i]))
+    {
+      p++;
+    }
+    else if (endsParenthetical(v[i]))
+    {
+      p--;
+     // if (p < 0)
+        //HANDLE ERROR: END PARENTHESES WITH NO BEGINNING
+    }
+    Command c = createCommand(v[i], p);
     addCommand(c);
   }
+  //if (p != 0)
+    //HANDLE ERROR: BEGINNING PARENTHESES WITH NO END
 }
 
 

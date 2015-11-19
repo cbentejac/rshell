@@ -20,7 +20,7 @@ class Connector
      * needs the success of the previous instruction to execute the next one.
      * \return A new Connector object.
      */
-    Connector(std::string r, bool success);
+    Connector(std::string r, bool success, int p);
     /** 
      * \brief Connector destructor.
      */
@@ -57,6 +57,10 @@ class Connector
      * \brief "Needs success of the previous instruction" condition.
      */
     bool needSuccess;
+    /**
+     * \brief Int representation of connector's level of precedence
+     */
+    int precedence;
 };
 
 #endif

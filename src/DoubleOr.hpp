@@ -17,7 +17,7 @@ class DoubleOr : public Connector
      * \brief DoubleOr constructor.
      * \return A DoubleOr object.
      */
-    DoubleOr();
+    DoubleOr(int p);
     /**
      * \brief DoubleOr destructor.
      */

@@ -30,7 +30,7 @@ class Test : public Command
      * \brief Parse a test command line.
      * \return A Test object.
      */
-    static Test parseTest(std::string cmd);
+    static Test parseTest(std::string cmd, int p);
     /**
      * \brief Test destructor.
      */

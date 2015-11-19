@@ -95,12 +95,23 @@ class ParsedCommand {
      */
     static bool isConnector(char *str);
     /**
+     * \brief Determines if a string begins a parenthetical.
+     * \param std:string str a command in string form.
+     * \return True if str begins a parenthetical; False otherwise.
+     */
+    static bool beginsParenthetical(std::string str);
+    /**
+     * \brief Determines if a string ends a parenthetical.
+     * \param std:string str a command in string form.
+     * \return True if str ends a parenthetical; False otherwise.
+     */
+    static bool endsParenthetical(std::string str);
+    /**
      * \brief Returns the connector corresponding to a char*.
      * \param char* str a character array.
      * \return A Connector corresponding to str.
      */
-    static Connector recognizeConnector(char* str);
-
+    static Connector recognizeConnector(char* str, int p);
     /**
      * \brief Removes the comments from the user input
      */
@@ -115,9 +126,10 @@ class ParsedCommand {
      * \param string command an isolated stand-alone command.
      * \return A Command object.
      */
-    Command createCommand(std::string command);
+    Command createCommand(std::string command, int precedence);
     /**
      * \brief Fills the vector commands with Command objects.
+     * \param int precedence the precedence value of the object's connector
      */
     void parse();
     /** 

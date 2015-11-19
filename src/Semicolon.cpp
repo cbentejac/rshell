@@ -9,7 +9,7 @@
 
 using namespace std;
 
-Semicolon::Semicolon() : Connector(";", false)
+Semicolon::Semicolon(int p) : Connector(";", false, p)
 {
 
 }

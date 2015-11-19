@@ -29,10 +29,10 @@ Test::~Test()
 }
 
 
-Test Test::parseTest(string cmd)
+Test Test::parseTest(string cmd, int p)
 {
   string arg;
-  Connector c = Semicolon();
+  Connector c = Semicolon(0);
 
   string tmp;
 
@@ -68,7 +68,7 @@ Test Test::parseTest(string cmd)
     {
       // If token is a connector
       if (ParsedCommand::isConnector(token))
-        c = ParsedCommand::recognizeConnector(token);
+        c = ParsedCommand::recognizeConnector(token, p);
 
       else // If it's not a connector, it's an argument
       {
@@ -94,17 +94,17 @@ Test Test::parseTest(string cmd)
 	  {
 	    // Separate the argument from the connector
 	    arg = arg.substr(0, arg.size() - 1); 
-            c = Semicolon();
+            c = Semicolon(p);
 	  }
 	  else if (ParsedCommand::endWithDoubleAnd(token))
   	  {
 	    arg = arg.substr(0, arg.size() - 2);
-	    c = DoubleAnd();
+	    c = DoubleAnd(p);
 	  }
 	  else
 	  {
 	    arg = arg.substr(0, arg.size() - 2);
-	    c = DoubleOr();
+	    c = DoubleOr(p);
           }
         }
       }

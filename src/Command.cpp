@@ -52,9 +52,10 @@ void Command::setArguments(Arguments arg)
 }
 
 
-void Command::setConnector(Connector c)
+void Command::setConnector(Connector c, int p)
 {
   connector = c;
+  precedence = p;
 }
 
 

@@ -64,7 +64,7 @@ class Command
      * \brief Sets the Connector object composing the Command object.
      * \param Connector c the new Connector object composing the Command.
      */
-    void setConnector(Connector c);
+    void setConnector(Connector c, int p);
 
     /**
      * \brief Prints the command on the standard output stream.
@@ -102,6 +102,10 @@ class Command
      * \brief Connector part of the command.
      */
     Connector connector;
+    /**
+     * \brief integer indicating the command's level of precedence.
+     */ 
+    int precedence;
 };
 
 #endif

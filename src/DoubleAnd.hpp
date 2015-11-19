@@ -17,7 +17,7 @@ class DoubleAnd : public Connector
      * \brief DoubleAnd constructor.
      * \return A DoubleAnd object.
      */
-    DoubleAnd();
+    DoubleAnd(int p);
     /**
      * \brief DoubleAnd destructor.
      */

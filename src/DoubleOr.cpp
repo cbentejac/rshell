@@ -9,7 +9,7 @@
 
 using namespace std;
 
-DoubleOr::DoubleOr() : Connector("||", false)
+DoubleOr::DoubleOr(int p) : Connector("||", false, p)
 {
 
 }
