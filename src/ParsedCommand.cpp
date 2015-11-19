@@ -380,16 +380,9 @@ void ParsedCommand::execute(bool &quit)
       break;
     }
 
-    // If the command is a test command
-    if (getCommand(i).isTest())
-      runNext = getCommand(i).runNext(getCommand(i).testSuccess());
-    
-
     // If the next command should be run and is not a test
     if (runNext == true && !getCommand(i).isTest()) 
     {
-      cout << "ENTER EXECVP" << endl;
-
       // Designed to handle the case where there are several arguments 
       char* str = const_cast<char*>(
                   getCommand(i).getArguments().getArguments().c_str()
@@ -456,8 +449,12 @@ void ParsedCommand::execute(bool &quit)
 
     else // If the current command isn't run, see if we run the next one or not
     {
+      // If the command is a test command, see if we must run the next command
+      if (getCommand(i).isTest())
+        runNext = getCommand(i).runNext(getCommand(i).testSuccess());
+    
       // If the connector is ||, then we mustn't run the next command
-      if (getCommand(i).getConnector().getRepresentation() == "||")
+      else if (getCommand(i).getConnector().getRepresentation() == "||")
         runNext = false;
       else // If it's && or ;, then we should run it
         runNext = true;

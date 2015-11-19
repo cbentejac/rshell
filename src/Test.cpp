@@ -117,9 +117,19 @@ Test Test::parseTest(string cmd)
     return Test(arg, c);
 
   Test test(c);
-  tmp.clear();
-  tmp = test.getArguments().getArguments();
-  tmp += arg;
-  test.setArguments(Arguments(tmp));
+
+  if (arg.empty()) // If there's no flag and no arguments
+  {
+    test.setArguments(Arguments(""));   
+  }
+
+  else 
+  {
+    tmp.clear();
+    tmp = test.getArguments().getArguments();
+    tmp += arg;
+    test.setArguments(Arguments(tmp));
+  }
+  
   return test;
 }

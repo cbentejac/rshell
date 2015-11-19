@@ -87,12 +87,10 @@ bool Command::isTest()
 
 bool Command::testSuccess()
 {
-//  struct stat buf;
-  bool success = true;
-
-/*  char* str = const_cast<char*>(getArguments().getArguments().c_str());
+  char* str = const_cast<char*>(getArguments().getArguments().c_str());
   char* token = strtok(str, " ");
 
+  struct stat buf;
   vector<string> v;
 
   while (token != NULL)
@@ -102,42 +100,48 @@ bool Command::testSuccess()
   }
 
   // If there are more than the flag and the path, the command is not valid
-  if (v.size() > 2)
-    success = false;
+  if (v.size() > 2 || v.size() == 0)
+    return false;
+
   else
   {
     char* args[2];
+   
     args[0] = const_cast<char*>(v[0].c_str());
-    args[1] = const_cast<char*>(v[1].c_str());
+    
+    // If size = 1, there is just a flag and no path: always return true
+    if (v.size() == 1)
+      return true;
+    
+    else
+      args[1] = const_cast<char*>(v[1].c_str());
 
+    // This part is only reached if there are a flag and a path
+    // Checks what kind of flag has been typed and returns the appropriate bool
     if (strcmp(args[0], "-e") == 0)
     {
-      success = stat(args[0], &buf);
+      if (stat(args[1], &buf) == 0)
+        return true;
     }
 
     else if (strcmp(args[0], "-f") == 0)
     {
-      success = stat(args[0], &buf);
-      if (success)
+      if (stat(args[1], &buf) == 0)
       {
         if (S_ISREG(buf.st_mode))
-	  success = true;
-	else
-	  success = false;
+	  return true;
       }
     }
 
     else if (strcmp(args[0], "-d") == 0)
     {
-      success = stat(args[0], &buf);
-      if (success)
+      if (stat(args[1], &buf) == 0)
       {
         if (S_ISDIR(buf.st_mode))
-	  success = true;
-	else
-	  success = false;
+	  return true;
       }
     }
-  }*/
-  return success;
+  }
+  
+  return false;
 }
