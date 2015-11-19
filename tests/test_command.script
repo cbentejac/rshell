@@ -1,0 +1,48 @@
+Script started on Wed 18 Nov 2015 07:18:36 PM PST
+[cbent002@hammer rshell]$ make
+make rshell
+make[1]: Entering directory `/home/csmajs/cbent002/CS100/rshell'
+mkdir -p bin; \
+	g++ -Wall -Werror -ansi -pedantic src/rshell.cpp src/Connector.cpp src/Semicolon.cpp src/DoubleAnd.cpp src/DoubleOr.cpp src/Arguments.cpp src/Executable.cpp src/Command.cpp src/Test.cpp src/ParsedCommand.cpp -o rshell; \
+	mv rshell ./bin
+make[1]: Leaving directory `/home/csmajs/cbent002/CS100/rshell'
+[cbent002@hammer rshell]$ bin/rshell
+Entering rshell.
+
+[cbent002@hammer.cs.ucr.edu]€ test src && echo OK
+OK
+[cbent002@hammer.cs.ucr.edu]€ test -e src && echo OK
+OK
+[cbent002@hammer.cs.ucr.edu]€ test -f src && echo OK
+[cbent002@hammer.cs.ucr.edu]€ test src || echo OK
+[cbent002@hammer.cs.ucr.edu]€ test -f src || echo OK
+OK
+[cbent002@hammer.cs.ucr.edu]€ [ src ] && echo OK
+OK
+[cbent002@hammer.cs.ucr.edu]€ [src ] && echo OK
+OK
+[cbent002@hammer.cs.ucr.edu]€ [ src] && echo OK
+OK
+[cbent002@hammer.cs.ucr.edu]€ [ -d src ] && echo OK
+OK
+[cbent002@hammer.cs.ucr.edu]€ [ -d src ] || echo OK
+[cbent002@hammer.cs.ucr.edu]€ [ -f src ] && echo OK
+[cbent002@hammer.cs.ucr.edu]€ [ -f src ] || echo OK
+OK
+[cbent002@hammer.cs.ucr.edu]€ [ ] && echo OK
+[cbent002@hammer.cs.ucr.edu]€ test && echo OK
+[cbent002@hammer.cs.ucr.edu]€ echo A && [ src ] && echo B
+A
+B
+[cbent002@hammer.cs.ucr.edu]€ echo A && [ src ] || echo B
+A
+[cbent002@hammer.cs.ucr.edu]€ echo A && [ sdfggsdgD][||^echo B
+A
+B
+[cbent002@hammer.cs.ucr.edu]€ test sdgid && exit
+[cbent002@hammer.cs.ucr.edu]€ test dsfohsdg || exit
+Exiting rshell.
+
+[cbent002@hammer rshell]$ exit
+
+Script done on Wed 18 Nov 2015 07:21:32 PM PST
