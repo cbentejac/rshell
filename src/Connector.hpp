@@ -32,6 +32,11 @@ class Connector
      */
     std::string getRepresentation();
     /**
+     * \brief Returns the precedence value of the connector.
+     * \return The int value.
+     */
+    int getPrecedence();
+    /**
      * \brief Sets the string representation of the connector.
      * \param string r the new representation of the connector;
      */

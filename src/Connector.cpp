@@ -27,6 +27,10 @@ string Connector::getRepresentation()
   return representation;
 }
 
+int Connector::getPrecedence()
+{
+  return precedence;
+}
 
 void Connector::setRepresentation(string r)
 {
