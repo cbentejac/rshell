@@ -555,10 +555,35 @@ bool ParsedCommand::readPrecedent (vector<Command> commands, Command c, bool sp,
   return success;
 }
 
+bool ParsedCommand::pcheck()
+{
+  int p = 0; // keeps track of how many parentheses sets x is currently within
+  for (unsigned int x = 0; x < commandLine.size(); x++)
+  {
+    if (commandLine.at(x) == '(') //this means x is entering a parentheses set
+    {
+      p++;
+    }
+    else if (commandLine.at(x) == ')') //this means x is leaving a parentheses set
+    {
+      p--;
+    }
+  } 
+  if (p == 0)
+    return true;
+  else
+    return false;
+}
+
 void ParsedCommand::parse()
 {
   stripComments(); // Eliminates the comments from the command line
   // Separates the different commands so that we can parse them one by one
+  if(!pcheck())
+  {
+    cout << "Incomplete precedence operator in command line" << endl;
+    return;
+  }
   vector<string> v = separateCommands(); 
   //Keeps track of how many parentheses each command is within
   int p = 0; 

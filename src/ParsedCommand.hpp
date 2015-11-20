@@ -135,7 +135,14 @@ class ParsedCommand {
      * bool &quit Wether or not the user entered quit.
      * \return The success value of the execution.
      */
-    bool readPrecedent(std::vector<Command> commands, Command c, bool sp, bool &quit);
+    bool readPrecedent(std::vector<Command> commands, Command c, bool sp,
+    bool &quit);
+    /**
+     * \brief determines if all the parentheses sets in the command line 
+     * are complete.
+     * \return True if all parentheses sets are complete, False otherwise.
+     */
+    bool pcheck();
     /**
      * \brief Fills the vector commands with Command objects.
      */
