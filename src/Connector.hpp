@@ -1,7 +1,7 @@
 /**
  * \file Connector.hpp
- * \author Candice Bentejac
- * \date November 6, 2015
+ * \author Candice Bentejac, Samuel Magness
+ * \date November 20, 2015
  * \brief Header for the Connector class.
  */
 
@@ -18,6 +18,7 @@ class Connector
      * \param string r the representation of the connector.
      * \param bool success the boolean that indicates whether the connector 
      * needs the success of the previous instruction to execute the next one.
+     * \param int p the precedence level of the connector.
      * \return A new Connector object.
      */
     Connector(std::string r, bool success, int p);
@@ -38,7 +39,7 @@ class Connector
     int getPrecedence();
     /**
      * \brief Sets the string representation of the connector.
-     * \param string r the new representation of the connector;
+     * \param string r the new representation of the connector.
      */
     void setRepresentation(std::string r); 
     /**
@@ -63,7 +64,7 @@ class Connector
      */
     bool needSuccess;
     /**
-     * \brief Int representation of connector's level of precedence
+     * \brief Int representation of connector's level of precedence.
      */
     int precedence;
 };

@@ -1,7 +1,7 @@
 /**
  * \file Command.hpp
- * \author Candice Bentejac
- * \date November 6, 2015
+ * \author Candice Bentejac, Samuel Magness
+ * \date November 20, 2015
  * \brief Header for the Command class.
  */
 
@@ -103,7 +103,7 @@ class Command
      */
     Connector connector;
     /**
-     * \brief integer indicating the command's level of precedence.
+     * \brief Integer indicating the command's level of precedence.
      */ 
     int precedence;
 };

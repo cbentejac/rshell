@@ -1,7 +1,7 @@
 /**
  * \file Command.cpp
- * \author Candice Bentejac
- * \date November 6, 2015
+ * \author Candice Bentejac, Samuel Magness
+ * \date November 20, 2015
  * \brief Definitions of the Command class.
  */
 
@@ -61,7 +61,9 @@ void Command::setConnector(Connector c, int p)
 
 void Command::readCommand()
 {
-  cout << getExecutable().getExecutable() << " " << getArguments().getArguments() << " " << getConnector().getRepresentation() << endl;
+  cout << getExecutable().getExecutable() << " " << 
+    getArguments().getArguments() << " " << 
+    getConnector().getRepresentation() << endl;
 }
 
 

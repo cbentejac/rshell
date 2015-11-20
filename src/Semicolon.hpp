@@ -1,7 +1,7 @@
 /**
  * \file Semicolon.hpp
- * \author Candice Bentejac
- * \date November 6, 2015
+ * \author Candice Bentejac, Samuel Magness
+ * \date November 20, 2015
  * \brief Header for the Semicolon class (inherits from the Connector class).
  */
 
@@ -15,6 +15,7 @@ class Semicolon : public Connector
   public:
     /**
      * \brief Semicolon constructor.
+     * \param int p the precedence level of the connector. 
      * \return A Semicolon object.
      */
     Semicolon(int p);

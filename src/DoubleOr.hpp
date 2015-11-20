@@ -1,7 +1,7 @@
 /**
  * \file DoubleOr.hpp
- * \author Candice Bentejac
- * \date November 6, 2015
+ * \author Candice Bentejac, Samuel Magness
+ * \date November 20, 2015
  * \brief Header for the DoubleOr class (inherits from the Connector class).
  */
 
@@ -15,6 +15,7 @@ class DoubleOr : public Connector
   public:
     /**
      * \brief DoubleOr constructor.
+     * \param int p the precedence level of the connector.
      * \return A DoubleOr object.
      */
     DoubleOr(int p);
