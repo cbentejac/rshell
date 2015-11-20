@@ -576,7 +576,6 @@ void ParsedCommand::execute(bool &quit)
     if ((i != 0) && (getCommand(i).getConnector().getPrecedence() >
      getCommand(i-1).getConnector().getPrecedence()))
     {
-      cout << "precedence triggered" << endl;
       //identify connector before precedence operator
       Command pc = getCommand(i-1);
       //and identify the arguements within precedence operator
@@ -588,7 +587,6 @@ void ParsedCommand::execute(bool &quit)
         i++;
       }
       pv.push_back(getCommand(i));
-      cout << "precedence vector size:" << pv.size() << endl;
       //execute the commands within the precedence operator and return 
       //success value
       success = readPrecedent(pv, pc, psuccess, quit);
