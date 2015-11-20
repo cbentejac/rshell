@@ -306,7 +306,10 @@ Command ParsedCommand::createCommand(string command, int precedence)
       if (command.at(x) == '(')
       {
         command.erase(x, 1);
-        break;
+        //handles consecutive parentheses
+        if (x != command.size()-1)
+          if(command.at(x+1) != '(') 
+            break;
       }
     }
   }
@@ -317,7 +320,10 @@ Command ParsedCommand::createCommand(string command, int precedence)
       if (command.at(x) == ')')
       {
         command.erase(x, 1);
-        break;
+        //handles consecutive parentheses
+        if (x != 0)
+          if(command.at(x-1) != ')')
+            break;
       }
     }
   }
