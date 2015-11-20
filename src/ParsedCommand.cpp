@@ -191,10 +191,10 @@ bool ParsedCommand::endsParenthetical(std::string str)
   }
   if ((temp.at(s-1) == '|') && (temp.at(s-2) == '|'))
   {
-    /*if (temp.at(s-3) == ')')
+    if (temp.at(s-3) == ')')
       return true;
     else
-      return false;*/
+      return false;
   }
   return false;
 }
@@ -315,7 +315,7 @@ Command ParsedCommand::createCommand(string command, int precedence)
     for (unsigned int x = command.size()-1; x >= 0; x--)
     {  
       if (command.at(x) == ')')
-      { 
+      {
         command.erase(x, 1);
         break;
       }
