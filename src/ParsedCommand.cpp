@@ -391,43 +391,45 @@ Command ParsedCommand::createCommand(string command, int precedence)
 
 bool ParsedCommand::readPrecedent (vector<Command> commands, Command c, bool sp, bool &quit)
 {
-  // Will the next instruction be run? By default, true
-  bool runNext = true; 
+  // Will the next instruction be run? Depends on the command before the operator
+  bool runNext = c.runNext(sp); 
 
   // Establish success outside of loop so that it can be returned
   bool success = false; 
 
   for (unsigned i = 0;  i < commands.size(); i++)
   {
+    // declare last iteration's success value for recursion
+    bool psuccess = success;
     // Has the command been run normally? By default, false
     success = false; 
     
     //if command has higher precedence than the previous command,
     //begin recursion
-    if ((i != 0) && (getCommand(i).getConnector().getPrecedence() >
-     getCommand(i-1).getConnector().getPrecedence()))
+    if ((i != 0) && (commands.at(i).getConnector().getPrecedence() >
+     commands.at(i-1).getConnector().getPrecedence()))
     {
       //identify command before precedence operator
-      Command pc = getCommand(i-1);
+      Command pc = commands.at(i-1);
       //and identify the arguements within precedence operator
       vector<Command> pv;
-      int p = getCommand(i).getConnector().getPrecedence();
-      while (getCommand(i).getConnector().getPrecedence() >= p)
+      int p = commands.at(i).getConnector().getPrecedence();
+      while (commands.at(i).getConnector().getPrecedence() >= p)
       {
-        pv.push_back(getCommand(i));
+        pv.push_back(commands.at(i));
         i++;
       }
-        pv.push_back(getCommand(i));
+        pv.push_back(commands.at(i));
       //execute the commands within the precedence operator and return 
       //success value
-      success = readPrecedent(pv, pc, success, quit);
+      success = readPrecedent(pv, pc, psuccess, quit);
       //if the end of the Command vector has been reached, end function.
       //otherwise, continue parsing the vector as normal.
       if (i >= commands.size()-1)
         return success; 
     }
     // If exit is the executable and the next instruction is to be run
-    if (getCommand(i).getExecutable().getExecutable() == "exit" && 
+    if (commands.at(i).getExecutable().getExecutable() == "exit" && 
         runNext == true) 
     // quit value becomes true
       quit = true;
@@ -510,11 +512,11 @@ bool ParsedCommand::readPrecedent (vector<Command> commands, Command c, bool sp,
     else // If the current command isn't run, see if we run the next one or not
     {
       // If the command is a test command, see if we must run the next command
-      if (getCommand(i).isTest())
-        runNext = getCommand(i).runNext(getCommand(i).testSuccess()) && c.runNext(sp);
+      if (commands.at(i).isTest())
+        runNext = commands.at(i).runNext(commands.at(i).testSuccess()) && c.runNext(sp);
     
       // If the connector is ||, then we mustn't run the next command
-      else if (getCommand(i).getConnector().getRepresentation() == "||")
+      else if (commands.at(i).getConnector().getRepresentation() == "||")
         runNext = false;
       else // If it's && or ;, then we should run it
         runNext = true && c.runNext(sp);
@@ -556,12 +558,16 @@ void ParsedCommand::execute(bool &quit)
   parse();
 
   // Will the next instruction be run? By default, true
-  bool runNext = true; 
-
+  bool runNext = true;
+  // Declare success outside of the loop so a previous iteration's
+  // success value can be used as a variable. 
+  bool success = false;
   for (unsigned i = 0;  i < getCommandVector().size(); i++)
   {
+    // keep previous iteration's success value for the precedence function.
+    bool psuccess = success;
     // Has the command been run normally? By default, false
-    bool success = false; 
+    success = false; 
     
     //if command has higher precedence than the previous command,
     //begin reading precedence. Subsequent commands having lower recursion
@@ -570,19 +576,22 @@ void ParsedCommand::execute(bool &quit)
     if ((i != 0) && (getCommand(i).getConnector().getPrecedence() >
      getCommand(i-1).getConnector().getPrecedence()))
     {
+      cout << "precedence triggered" << endl;
       //identify connector before precedence operator
       Command pc = getCommand(i-1);
       //and identify the arguements within precedence operator
       vector<Command> pv;
       int p = getCommand(i).getConnector().getPrecedence();
-      while (getCommand(i-1).getConnector().getPrecedence() >= p)
+      while (getCommand(i).getConnector().getPrecedence() >= p)
       {
         pv.push_back(getCommand(i));
         i++;
       }
+      pv.push_back(getCommand(i));
+      cout << "precedence vector size:" << pv.size() << endl;
       //execute the commands within the precedence operator and return 
       //success value
-      success = readPrecedent(pv, pc, success, quit);
+      success = readPrecedent(pv, pc, psuccess, quit);
       //if the end of the Command vector has been reached, exit.
       //otherwise, continue parsing the vector as normal.
       if (i >= getCommandVector().size()-1)
