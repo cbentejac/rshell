@@ -127,6 +127,13 @@ class ParsedCommand {
      * \return A Command object.
      */
     Command createCommand(std::string command, int precedence);
+    /**\brief recursively executes precedence arguements.
+     * \param vector<Command> commands the command objects within
+     * the precedence operator.
+     * Connector c The connector immediately preceding the value
+     * \return The success value of the execution.
+     */
+    bool readPrecedent(std::vector<Command> commands, Connector c);
     /**
      * \brief Fills the vector commands with Command objects.
      * \param int precedence the precedence value of the object's connector

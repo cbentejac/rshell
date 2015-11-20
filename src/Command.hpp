@@ -72,7 +72,7 @@ class Command
     void readCommand();
     /**
      * \brief Determines whether the next instruction must be run or not, 
-     * depending on the success and the connector of the previous run command.
+     * depending on the success and the connector of the previous run command
      * \param bool success: true if the previous command was successfully run; 
      * false if it was not.
      * \return true if the next command can be run; false it cannot.

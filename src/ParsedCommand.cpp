@@ -388,6 +388,10 @@ Command ParsedCommand::createCommand(string command, int precedence)
   return Command(ex, arg, c); // Create the Command object with the string
 }
 
+bool ParsedCommand::readPrecedent (vector<Command> commands, Connector c)
+{
+  return false; 
+}
 
 void ParsedCommand::parse()
 {
@@ -429,6 +433,31 @@ void ParsedCommand::execute(bool &quit)
     // Has the command been run normally? By default, false
     bool success = false; 
     
+    //if command has higher precedence than the previous command,
+    //begin reading precedence. Subsequent commands having lower recursion
+    //is how bash normally handles order of operations, so we don't need
+    //more code for it.
+    if ((i != 0) && (getCommand(i).getConnector().getPrecedence() >
+     getCommand(i-1).getConnector().getPrecedence()))
+    {
+      //identify connector before precedence operator
+      Connector pc = getCommand(i-1).getConnector();
+      //and identify the arguements within precedence operator
+      vector<Command> pv;
+      int p = getCommand(i).getConnector().getPrecedence();
+      while (getCommand(i-1).getConnector().getPrecedence() >= p)
+      {
+        pv.push_back(getCommand(i));
+        i++;
+      }
+      //execute the commands within the precedence operator and return 
+      //success value
+      success = readPrecedent(pv, pc);
+      //if the end of the Command vector has been reached, exit.
+      //otherwise, continue parsing the vector as normal.
+      if (i >= getCommandVector().size()-1)
+        break; 
+    }
     // If exit is the executable and the next instruction is to be run
     if (getCommand(i).getExecutable().getExecutable() == "exit" && 
         runNext == true) 
@@ -505,7 +534,7 @@ void ParsedCommand::execute(bool &quit)
     
       // Given the success/fail of this command:
       // will the next one be run considering its connector?
-      runNext = getCommand(i).runNext(success);
+        runNext = getCommand(i).runNext(success);
       
       delete[] args; // Delete the array
     }
