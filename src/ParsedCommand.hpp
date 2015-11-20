@@ -130,13 +130,14 @@ class ParsedCommand {
     /**\brief recursively executes precedence arguements.
      * \param vector<Command> commands the command objects within
      * the precedence operator.
-     * Connector c The connector immediately preceding the value
+     * Command c The command immediately preceding the precedence operator.
+     * bool sp the success value of the previous command.
+     * bool &quit Wether or not the user entered quit.
      * \return The success value of the execution.
      */
-    bool readPrecedent(std::vector<Command> commands, Connector c);
+    bool readPrecedent(std::vector<Command> commands, Command c, bool sp, bool &quit);
     /**
      * \brief Fills the vector commands with Command objects.
-     * \param int precedence the precedence value of the object's connector
      */
     void parse();
     /** 

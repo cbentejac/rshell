@@ -10,6 +10,7 @@
 #include <assert.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <cstdlib>
 
 using namespace std;
 
@@ -388,9 +389,138 @@ Command ParsedCommand::createCommand(string command, int precedence)
   return Command(ex, arg, c); // Create the Command object with the string
 }
 
-bool ParsedCommand::readPrecedent (vector<Command> commands, Connector c)
+bool ParsedCommand::readPrecedent (vector<Command> commands, Command c, bool sp, bool &quit)
 {
-  return false; 
+  // Will the next instruction be run? By default, true
+  bool runNext = true; 
+
+  // Establish success outside of loop so that it can be returned
+  bool success = false; 
+
+  for (unsigned i = 0;  i < commands.size(); i++)
+  {
+    // Has the command been run normally? By default, false
+    success = false; 
+    
+    //if command has higher precedence than the previous command,
+    //begin recursion
+    if ((i != 0) && (getCommand(i).getConnector().getPrecedence() >
+     getCommand(i-1).getConnector().getPrecedence()))
+    {
+      //identify command before precedence operator
+      Command pc = getCommand(i-1);
+      //and identify the arguements within precedence operator
+      vector<Command> pv;
+      int p = getCommand(i).getConnector().getPrecedence();
+      while (getCommand(i).getConnector().getPrecedence() >= p)
+      {
+        pv.push_back(getCommand(i));
+        i++;
+      }
+        pv.push_back(getCommand(i));
+      //execute the commands within the precedence operator and return 
+      //success value
+      success = readPrecedent(pv, pc, success, quit);
+      //if the end of the Command vector has been reached, end function.
+      //otherwise, continue parsing the vector as normal.
+      if (i >= commands.size()-1)
+        return success; 
+    }
+    // If exit is the executable and the next instruction is to be run
+    if (getCommand(i).getExecutable().getExecutable() == "exit" && 
+        runNext == true) 
+    // quit value becomes true
+      quit = true;
+
+    // If exit has been found
+    if (quit == true) 
+    // Stop trying executing the rest of the command line
+    {
+      cout << "Exiting rshell." << endl << endl;
+      return success;
+    }
+
+    // If the next command should be run and is not a test
+    if (runNext == true && !commands.at(i).isTest()) 
+    {
+      // Designed to handle the case where there are several arguments 
+      char* str = const_cast<char*>(
+                  commands.at(i).getArguments().getArguments().c_str()
+  		  ); // Takes the arguments list
+      char* token = strtok(str, " "); // Tokenizes to determine the # of args
+      vector<string> v;
+    
+      // The arguments are put in a vector whose size 
+      while (token != NULL)
+      {
+        v.push_back(string(token));
+        token = strtok(NULL, " ");
+      } 
+    
+      int size = v.size() + 2; // Size of args (exec + args # + null = args # + 2)
+      char** args = new char*[size];
+    
+      for (int j = 0; j < size; j++)
+      {
+        if (j == 0) // Executable
+          args[j] = const_cast<char*>(commands.at(i).getExecutable().getExecutable().c_str());
+        else if (j == size - 1) // NULL
+          args[j] = NULL;
+        else // Arguments
+          args[j] = const_cast<char*>(v[j - 1].c_str());
+      }
+
+      pid_t c_pid, pid;
+      int status;
+
+      c_pid = fork();
+
+      if (c_pid < 0) // Fork problem
+      {
+        perror("Error: fork failed");
+        exit(1);
+      }
+      else if (c_pid == 0) // Child process
+      {
+        execvp(args[0], args);
+        perror("Error: execvp failed");
+      } 
+      else if (c_pid > 0) // Parent process
+      {
+        if ((pid = wait(&status)) < 0)
+        {
+          perror("Error occurred during wait");
+	  exit(1);
+        }
+      }  
+    
+      if (WIFEXITED(status)) // The child process ended normally
+      {
+        if (WEXITSTATUS(status) == 0) // The child process was executed normally
+          success = true; 
+      }  
+    
+      // Given the success/fail of this command:
+      // will the next one be run considering its connector?
+        runNext = commands.at(i).runNext(success) && c.runNext(sp);
+      
+      delete[] args; // Delete the array
+    }
+
+    else // If the current command isn't run, see if we run the next one or not
+    {
+      // If the command is a test command, see if we must run the next command
+      if (getCommand(i).isTest())
+        runNext = getCommand(i).runNext(getCommand(i).testSuccess()) && c.runNext(sp);
+    
+      // If the connector is ||, then we mustn't run the next command
+      else if (getCommand(i).getConnector().getRepresentation() == "||")
+        runNext = false;
+      else // If it's && or ;, then we should run it
+        runNext = true && c.runNext(sp);
+    }
+  }
+  return success;
 }
 
 void ParsedCommand::parse()
@@ -441,7 +571,7 @@ void ParsedCommand::execute(bool &quit)
      getCommand(i-1).getConnector().getPrecedence()))
     {
       //identify connector before precedence operator
-      Connector pc = getCommand(i-1).getConnector();
+      Command pc = getCommand(i-1);
       //and identify the arguements within precedence operator
       vector<Command> pv;
       int p = getCommand(i).getConnector().getPrecedence();
@@ -452,7 +582,7 @@ void ParsedCommand::execute(bool &quit)
       }
       //execute the commands within the precedence operator and return 
       //success value
-      success = readPrecedent(pv, pc);
+      success = readPrecedent(pv, pc, success, quit);
       //if the end of the Command vector has been reached, exit.
       //otherwise, continue parsing the vector as normal.
       if (i >= getCommandVector().size()-1)
