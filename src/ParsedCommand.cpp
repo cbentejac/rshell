@@ -305,11 +305,9 @@ Command ParsedCommand::createCommand(string command, int precedence)
     {
       if (command.at(x) == '(')
       {
-        command.erase(x, 1);
         //handles consecutive parentheses
-        if (x != command.size()-1)
-          if(command.at(x+1) != '(') 
-            break;
+        while((command.at(x) == '(') && (x < command.size()))
+          command.erase(x, 1);
       }
     }
   }
