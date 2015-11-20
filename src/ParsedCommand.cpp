@@ -152,7 +152,13 @@ bool ParsedCommand::isConnector(char* str)
 // Returns true if str begins a parenthetical statement.
 bool ParsedCommand::beginsParenthetical(std::string str)
 {
-  if (str.at(0) == '(')
+  std::string temp = str;//create copy of str to remove whitespace
+  for (unsigned int x = 0; x < temp.size(); x++)
+  {
+    if (temp.at(x) == ' ')
+      temp.erase(x, 1);
+  }
+  if (temp.at(0) == '(')
     return true;
   else
     return false;
@@ -162,27 +168,33 @@ bool ParsedCommand::beginsParenthetical(std::string str)
 // Returns true if str ends a parenthetical statement.
 bool ParsedCommand::endsParenthetical(std::string str)
 {
-  unsigned int s = str.size();
-  if (str.at(s-1) == ';')
+  std::string temp = str;//create copy of str to remove whitespace
+ for (unsigned int x = 0; x < temp.size(); x++)
   {
-    if (str.at(s-2) == ')')
+     if (temp.at(x) == ' ')
+       temp.erase(x, 1);
+  }
+  unsigned int s = temp.size();
+  if (temp.at(s-1) == ';')
+  {
+    if (temp.at(s-2) == ')')
       return true;
     else 
       return false;
   }
-  if ((str.at(s-1) == '&') && (str.at(s-2) == '&'))
+  if ((temp.at(s-1) == '&') && (temp.at(s-2) == '&'))
   {
-    if(str.at(s-3) == ')')
+    if(temp.at(s-3) == ')')
       return true;
     else
       return false;
   }
-  if ((str.at(s-1) == '|') && (str.at(s-2) == '|'))
+  if ((temp.at(s-1) == '|') && (temp.at(s-2) == '|'))
   {
-    if (str.at(s-3) == ')')
+    /*if (temp.at(s-3) == ')')
       return true;
     else
-      return false;
+      return false;*/
   }
   return false;
 }
@@ -288,14 +300,26 @@ Command ParsedCommand::createCommand(string command, int precedence)
 { 
   //Remove the parentheses, we no longer need them.
   if (beginsParenthetical(command))
-    command.erase(command.begin());
+  {
+    for (unsigned int x = 0; x < command.size(); x++)
+    {
+      if (command.at(x) == '(')
+      {
+        command.erase(x, 1);
+        break;
+      }
+    }
+  }
   if (endsParenthetical(command))
   {
-    unsigned int s = command.size();
-    if (command.at(s-1) == ';')
-      command.erase(command.end()-2);
-    else
-      command.erase(command.end()-3);
+    for (unsigned int x = command.size()-1; x >= 0; x--)
+    {  
+      if (command.at(x) == ')')
+      { 
+        command.erase(x, 1);
+        break;
+      }
+    }
   }
     
   string copy = "" + command; // Copy of command that will be tokenized
