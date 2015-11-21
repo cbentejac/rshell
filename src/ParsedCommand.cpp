@@ -164,6 +164,50 @@ bool ParsedCommand::beginsParenthetical(std::string str)
     return false;
 }
 
+int ParsedCommand::bPCount(std::string command)
+{
+  int c = 0;
+  std::string temp = command;//create copy of str to remove whitespace
+  for (unsigned int x = 0; x < temp.size(); x++)
+  {
+    if (temp.at(x) == ' ')
+      temp.erase(x, 1);
+  }
+  //count consecutive parentheses at beginning of arguement
+  for (unsigned int x = 0; x < temp.size(); x++)
+  {
+    if (temp.at(x) == '(')
+    {
+      c++;
+      if (temp.at(x+1) != '(')
+        break;
+    }
+  }
+  return c;
+}
+
+int ParsedCommand::ePCount(std::string command)
+{
+  int c = 0;
+  std::string temp = command;//create copy of str to remove whitespace
+  for (unsigned int x = 0; x < temp.size(); x++)
+  {
+    if (temp.at(x) == ' ')
+      temp.erase(x, 1);
+  }
+  //count consecutive parentheses at beginning of arguement
+  for (unsigned int x = temp.size()-1; x >= 0; x--)
+  {
+    if (temp.at(x) == ')')
+    {
+      c++;
+      if (temp.at(x-1) != ')')
+        break;
+    }
+  }
+  return c;
+}
+
 
 // Returns true if str ends a parenthetical statement.
 bool ParsedCommand::endsParenthetical(std::string str)
@@ -614,11 +658,11 @@ void ParsedCommand::parse()
   {
     if (beginsParenthetical(v[i]))
     {
-      p++;
+      p += bPCount(v[i]);
     }
     if (endsParenthetical(v[i]))
     {
-      p--;
+      p -= ePCount(v[i]);
      // if (p < 0)
         //HANDLE ERROR: END PARENTHESES WITH NO BEGINNING
     }
@@ -674,6 +718,7 @@ void ParsedCommand::execute(bool &quit)
       //otherwise, continue parsing the vector as normal.
       if (i >= getCommandVector().size() - 1)
         break; 
+        i++;
     }
     // If exit is the executable and the next instruction is to be run
     if (getCommand(i).getExecutable().getExecutable() == "exit" && 

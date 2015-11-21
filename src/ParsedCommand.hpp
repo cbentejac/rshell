@@ -101,6 +101,18 @@ class ParsedCommand {
      */
     static bool beginsParenthetical(std::string str);
     /**
+     * \brief counts the number of precedence initiators in a command string.
+     * \param std::string command The command string.
+     * \return int the number of precedence initiators in the string.
+     */
+    int bPCount(std::string command);
+    /**
+     * \brief counts the number of precedence terminators in a command string.
+     * \param std::string command The command string.
+     * \return int the number of precedence terminators in the string.
+     */
+    int ePCount(std::string command);
+    /**
      * \brief Determines if a string ends a parenthetical.
      * \param std:string str a command in string form.
      * \return True if str ends a parenthetical; False otherwise.
