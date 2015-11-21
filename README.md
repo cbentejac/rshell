@@ -75,15 +75,7 @@ You can also use the `test` command and the precedence operators:
 
 - If there are several connectors following each other (like `&& && && &&`) or a sequence of characters corresponding to the connectors (like `||||||||`), **rshell** tries to execute and fails.
 
-- `echo A && ((echo B && echo C) || echo D) && echo E` prints 
-```
-A
-B
-C
-C
-E
-```
-
+- When there are more than 4 commands in the entered command line, the execution might not work.
 
 ## Authors
 #### Homework 1
