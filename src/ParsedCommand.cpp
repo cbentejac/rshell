@@ -553,7 +553,7 @@ bool ParsedCommand::readPrecedent (vector<Command> commands, Command c, bool sp,
   return success;
 }
 
-bool ParsedCommand::pcheck()
+bool ParsedCommand::pCheck()
 {
   int p = 0; // keeps track of how many parentheses sets x is currently within
   for (unsigned int x = 0; x < commandLine.size(); x++)
@@ -573,11 +573,25 @@ bool ParsedCommand::pcheck()
     return false;
 }
 
+bool ParsedCommand::isEmptyP(std::string command)
+{
+  int x = 0;
+  while ((command.at(x) != ';')&& (command.at(x) != '|') && (command.at(x) != '&'))
+  {
+    if((command.at(x) != ' ') && (command.at(x) != '(') && (command.at(x) != ')'))
+    {
+      return false;
+    }
+    x++;
+  }
+  return true;
+}
+
 void ParsedCommand::parse()
 {
   stripComments(); // Eliminates the comments from the command line
   // Separates the different commands so that we can parse them one by one
-  if(!pcheck())
+  if(!pCheck())
   {
     cout << "Incomplete precedence operator in command line" << endl;
     return;
@@ -585,7 +599,6 @@ void ParsedCommand::parse()
   vector<string> v = separateCommands(); 
   //Keeps track of how many parentheses each command is within
   int p = 0; 
-
   for (unsigned i = 0; i < v.size(); i++)
   {
     if (beginsParenthetical(v[i]))
@@ -598,8 +611,11 @@ void ParsedCommand::parse()
      // if (p < 0)
         //HANDLE ERROR: END PARENTHESES WITH NO BEGINNING
     }
-    Command c = createCommand(v[i], p);
-    addCommand(c);
+    if (!isEmptyP(v[i])) //if command string is an empty precedent op, ignore it
+    {
+      Command c = createCommand(v[i], p);
+      addCommand(c);
+    }
   }
   //if (p != 0)
     //HANDLE ERROR: BEGINNING PARENTHESES WITH NO END

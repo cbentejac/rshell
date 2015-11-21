@@ -142,7 +142,13 @@ class ParsedCommand {
      * are complete.
      * \return True if all parentheses sets are complete, False otherwise.
      */
-    bool pcheck();
+    bool pCheck();
+    /**
+     * \brief determines if command string is an empty precedence operator.
+     * \param std::string command The command string.
+     * \return True if empty precedence operator, false otherwise.
+     */
+    bool isEmptyP(std::string command);
     /**
      * \brief Fills the vector commands with Command objects.
      */
