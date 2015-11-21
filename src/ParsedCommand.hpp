@@ -1,7 +1,7 @@
 /**
  * \file ParsedCommand.hpp
- * \author Candice Bentejac
- * \date November 6, 2015
+ * \author Candice Bentejac, Samuel Magness
+ * \date November 20, 2015
  * \brief Header for the ParsedCommand class.
  */
 
