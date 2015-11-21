@@ -605,7 +605,7 @@ void ParsedCommand::parse()
     {
       p++;
     }
-    else if (endsParenthetical(v[i]))
+    if (endsParenthetical(v[i]))
     {
       p--;
      // if (p < 0)
