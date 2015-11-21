@@ -1,7 +1,7 @@
 /**
  * \file ParsedCommand.cpp
- * \author Candice Bentejac
- * \date November 6, 2015
+ * \author Candice Bentejac, Samuel Magness
+ * \date November 20, 2015
  * \brief Definitions of the class ParsedCommand.
  */
 
@@ -175,29 +175,31 @@ bool ParsedCommand::endsParenthetical(std::string str)
        temp.erase(x, 1);
   }
   unsigned int s = temp.size();
-  if (temp.at(s-1) == ';')
+  if (temp.at(s - 1) == ';')
   {
-    if (temp.at(s-2) == ')')
+    if (temp.at(s - 2) == ')')
       return true;
     else 
       return false;
   }
-  if ((temp.at(s-1) == '&') && (temp.at(s-2) == '&'))
+  if ((temp.at(s - 1) == '&') && (temp.at(s - 2) == '&'))
   {
-    if(temp.at(s-3) == ')')
+    if(temp.at(s - 3) == ')')
       return true;
     else
       return false;
   }
-  if ((temp.at(s-1) == '|') && (temp.at(s-2) == '|'))
+  if ((temp.at(s - 1) == '|') && (temp.at(s - 2) == '|'))
   {
-    if (temp.at(s-3) == ')')
+    if (temp.at(s - 3) == ')')
       return true;
     else
       return false;
   }
   return false;
 }
+
+
 // Returns the connector corresponding to a string representation
 Connector ParsedCommand::recognizeConnector(char* str, int p)
 {
@@ -417,6 +419,7 @@ Command ParsedCommand::createCommand(string command, int precedence)
   return Command(ex, arg, c); // Create the Command object with the string
 }
 
+
 bool ParsedCommand::readPrecedent (vector<Command> commands, Command c, bool sp, bool &quit)
 {
   // Will the next instruction be run? Depends on the command before the operator
@@ -456,6 +459,7 @@ bool ParsedCommand::readPrecedent (vector<Command> commands, Command c, bool sp,
       if (i >= commands.size()-1)
         return success; 
     }
+
     // If exit is the executable and the next instruction is to be run
     if (commands.at(i).getExecutable().getExecutable() == "exit" && 
         runNext == true) 
@@ -541,7 +545,8 @@ bool ParsedCommand::readPrecedent (vector<Command> commands, Command c, bool sp,
     {
       // If the command is a test command, see if we must run the next command
       if (commands.at(i).isTest())
-        runNext = commands.at(i).runNext(commands.at(i).testSuccess()) && c.runNext(sp);
+        runNext = commands.at(i).runNext(commands.at(i).testSuccess()) 
+	          && c.runNext(sp);
     
       // If the connector is ||, then we mustn't run the next command
       else if (commands.at(i).getConnector().getRepresentation() == "||")
@@ -553,16 +558,17 @@ bool ParsedCommand::readPrecedent (vector<Command> commands, Command c, bool sp,
   return success;
 }
 
+
 bool ParsedCommand::pCheck()
 {
   int p = 0; // keeps track of how many parentheses sets x is currently within
   for (unsigned int x = 0; x < commandLine.size(); x++)
   {
-    if (commandLine.at(x) == '(') //this means x is entering a parentheses set
+    if (commandLine.at(x) == '(') // x is entering a parentheses set
     {
       p++;
     }
-    else if (commandLine.at(x) == ')') //this means x is leaving a parentheses set
+    else if (commandLine.at(x) == ')') // x is leaving a parentheses set
     {
       p--;
     }
@@ -576,9 +582,13 @@ bool ParsedCommand::pCheck()
 bool ParsedCommand::isEmptyP(std::string command)
 {
   int x = 0;
-  while ((command.at(x) != ';')&& (command.at(x) != '|') && (command.at(x) != '&'))
+  while ((command.at(x) != ';') &&
+         (command.at(x) != '|') && 
+	 (command.at(x) != '&'))
   {
-    if((command.at(x) != ' ') && (command.at(x) != '(') && (command.at(x) != ')'))
+    if((command.at(x) != ' ') && 
+       (command.at(x) != '(') && 
+       (command.at(x) != ')'))
     {
       return false;
     }
@@ -586,6 +596,7 @@ bool ParsedCommand::isEmptyP(std::string command)
   }
   return true;
 }
+
 
 void ParsedCommand::parse()
 {
@@ -643,10 +654,10 @@ void ParsedCommand::execute(bool &quit)
     //is how bash normally handles order of operations, so we don't need
     //more code for it.
     if ((i != 0) && (getCommand(i).getConnector().getPrecedence() >
-     getCommand(i-1).getConnector().getPrecedence()))
+     getCommand(i - 1).getConnector().getPrecedence()))
     {
       //identify connector before precedence operator
-      Command pc = getCommand(i-1);
+      Command pc = getCommand(i - 1);
       //and identify the arguements within precedence operator
       vector<Command> pv;
       int p = getCommand(i).getConnector().getPrecedence();
@@ -661,7 +672,7 @@ void ParsedCommand::execute(bool &quit)
       success = readPrecedent(pv, pc, psuccess, quit);
       //if the end of the Command vector has been reached, exit.
       //otherwise, continue parsing the vector as normal.
-      if (i >= getCommandVector().size()-1)
+      if (i >= getCommandVector().size() - 1)
         break; 
     }
     // If exit is the executable and the next instruction is to be run
