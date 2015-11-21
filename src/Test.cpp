@@ -1,6 +1,6 @@
 /**
  * \file Test.cpp
- * \author Candice Bentejac
+ * \author Candice Bentejac, Samuel Magness
  * \date November 20, 2015
  * \brief Definitions of the Test class.
  */
@@ -40,14 +40,21 @@ Test Test::parseTest(string cmd, int p)
   // [xxx] won't work, as in the original bash
   for (unsigned i = 0; i < cmd.size() - 1; i++)
   {
+    // Space between the flag and "test" or "["
     if (cmd[i] != ' ' && cmd[i + 1] == '-')
       tmp += " ";
 
     tmp += cmd[i];
     
+    // Space between arguments and "]"
     if (cmd[i + 1] == ']' && cmd[i] != ' ')
       tmp += " ";
+
+    // Space between "]" and connector
+    if (cmd[i] == ']' && cmd[i + 1] != ' ')
+      tmp += " ";
     
+    // Space between "[" and arguments
     if (cmd[i] == '[')
       tmp += " ";  
   }
@@ -123,7 +130,7 @@ Test Test::parseTest(string cmd, int p)
     test.setArguments(Arguments(""));   
   }
 
-  else 
+  else // If there is no flag but an argument 
   {
     tmp.clear();
     tmp = test.getArguments().getArguments();

@@ -1,6 +1,6 @@
 /**
  * \file Test.hpp
- * \author Candice Bentejac
+ * \author Candice Bentejac, Samuel Magness
  * \date November 20, 2015
  * \brief Header for the Test class (inherits from the Command class). 
  */
